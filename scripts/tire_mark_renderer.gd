@@ -1,8 +1,10 @@
 extends Node2D
 
 const minSegmentLength = 20
-const maxPoints = 500
+const maxPoints = 1000
 const lineThickness = 2
+const lineFadeIntensity = 500.0
+const lineFadeMax = .5
 const p1Offset = Vector2(-5, -10)
 const p2Offset = Vector2(5, -10)
 const p3Offset = Vector2(-5, 10)
@@ -62,4 +64,4 @@ func add_point(point):
 
 func _draw():
 	for i in range(0, points.size()-1, 2):
-		draw_line(points[i], points[i+1], Color(0, 0, 0), lineThickness)
+		draw_line(points[i], points[i+1], Color(0, 0, 0, min(lineFadeMax, (i + maxPoints - points.size()) / lineFadeIntensity)), lineThickness)
