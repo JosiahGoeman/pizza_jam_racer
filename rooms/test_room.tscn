@@ -14,6 +14,7 @@ extents = Vector2( 11.0686, 9.91852 )
 
 [node name="root" type="Node2D"]
 
+transform/scale = Vector2( 8, 8 )
 script/script = ExtResource( 1 )
 
 [node name="car_prefab" type="Node2D" parent="."]
@@ -31,7 +32,7 @@ texture = ExtResource( 3 )
 [node name="camera" type="Node2D" parent="car_prefab/car"]
 
 script/script = ExtResource( 4 )
-zoom = 0.75
+zoom = 0.01
 
 [node name="tire_marks" type="Node2D" parent="car_prefab"]
 
@@ -81,10 +82,10 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 544.0
-margin/top = 544.0
-margin/right = -1504.0
-margin/bottom = -1504.0
+margin/left = 513.0
+margin/top = 569.0
+margin/right = -1535.0
+margin/bottom = -1479.0
 texture = ExtResource( 6 )
 stretch_mode = 2
 
