@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=1]
+[gd_scene load_steps=13 format=1]
 
 [ext_resource path="res://scripts/global.gd" type="Script" id=1]
 [ext_resource path="res://scripts/car/drive_physics_mouse.gd" type="Script" id=2]
@@ -8,13 +8,14 @@
 [ext_resource path="res://scripts/follow_camera.gd" type="Script" id=6]
 [ext_resource path="res://scripts/control_circle.gd" type="Script" id=7]
 [ext_resource path="res://scripts/tire_mark_renderer.gd" type="Script" id=8]
-[ext_resource path="res://icon.png" type="Texture" id=9]
-[ext_resource path="res://textures/pavement.png" type="Texture" id=10]
+[ext_resource path="res://textures/pavement.png" type="Texture" id=9]
+[ext_resource path="res://prefabs/wall.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scripts/fps_counter.gd" type="Script" id=11]
 
-[sub_resource type="RectangleShape2D" id=1]
+[sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
-extents = Vector2( 11.0686, 9.91852 )
+radius = 32.0
 
 [node name="root" type="Node2D"]
 
@@ -26,26 +27,31 @@ z/z = 1
 
 [node name="car" type="Node2D" parent="car_prefab"]
 
+transform/pos = Vector2( -50, 300 )
 script/script = ExtResource( 2 )
 
-[node name="sprite_body_primary" type="Sprite" parent="car_prefab/car"]
+[node name="sprites" type="Node2D" parent="car_prefab/car"]
+
+[node name="sprite_body_primary" type="Sprite" parent="car_prefab/car/sprites"]
 
 z/z = 2
 z/relative = false
 texture = ExtResource( 3 )
 modulate = Color( 1, 0, 0, 1 )
 
-[node name="sprite_body_secondary" type="Sprite" parent="car_prefab/car"]
+[node name="sprite_body_secondary" type="Sprite" parent="car_prefab/car/sprites"]
 
 texture = ExtResource( 4 )
 modulate = Color( 0.0078125, 0, 1, 1 )
 
-[node name="sprite_body_wheels" type="Sprite" parent="car_prefab/car"]
+[node name="sprite_body_wheels" type="Sprite" parent="car_prefab/car/sprites"]
 
 texture = ExtResource( 5 )
+hframes = 2
 
 [node name="camera" type="Node2D" parent="car_prefab/car"]
 
+visibility/visible = false
 script/script = ExtResource( 6 )
 zoom = 2.0
 
@@ -59,42 +65,31 @@ circleThinkness = 2
 nubSize = 10
 nubColor = Color( 0, 0, 0, 0.2 )
 
-[node name="tire_marks" type="Node2D" parent="car_prefab"]
-
-script/script = ExtResource( 8 )
-
-[node name="wall" type="StaticBody2D" parent="."]
-
-transform/pos = Vector2( 410.5, 202 )
-transform/scale = Vector2( 4.26562, 2.9375 )
-z/z = 1
-input/pickable = false
-shapes/0/shape = SubResource( 1 )
-shapes/0/transform = Matrix32( 2.11627, 0, 0, 2.25307, -2.46154, -5.78723 )
-shapes/0/trigger = false
-collision/layers = 1
-collision/mask = 1
-constant_linear_velocity = Vector2( 0, 0 )
-constant_angular_velocity = 0.0
-friction = 1.0
-bounce = 0.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="wall"]
+[node name="collider" type="Area2D" parent="car_prefab/car"]
 
 visibility/visible = false
-transform/pos = Vector2( -2.46154, -5.78723 )
-transform/scale = Vector2( 2.11627, 2.25307 )
+input/pickable = true
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+
+[node name="collider_shape" type="CollisionShape2D" parent="car_prefab/car/collider"]
+
 shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
 
-[node name="Sprite" type="Sprite" parent="wall"]
+[node name="tire_marks" type="Node2D" parent="car_prefab"]
 
-visibility/visible = false
-transform/pos = Vector2( -2.2271, -6.46808 )
-texture = ExtResource( 9 )
+script/script = ExtResource( 8 )
 
 [node name="ground" type="Node2D" parent="."]
+
+editor/display_folded = true
 
 [node name="TextureFrame" type="TextureFrame" parent="ground"]
 
@@ -111,7 +106,84 @@ margin/left = 544.0
 margin/top = 544.0
 margin/right = -1504.0
 margin/bottom = -1504.0
-texture = ExtResource( 10 )
+texture = ExtResource( 9 )
+expand = true
 stretch_mode = 2
 
+[node name="obstacles" type="Node2D" parent="."]
 
+editor/display_folded = true
+
+[node name="wall" parent="obstacles" instance=ExtResource( 10 )]
+
+editor/display_folded = true
+transform/pos = Vector2( 18, 536 )
+transform/scale = Vector2( 16.5312, 1 )
+
+[node name="wall 2" parent="obstacles" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 538, 1.5 )
+transform/scale = Vector2( 1, 15.8594 )
+
+[node name="wall 3" parent="obstacles" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 27.5, -534 )
+transform/scale = Vector2( 16.8281, 1 )
+
+[node name="wall 4" parent="obstacles" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( -540, -9 )
+transform/scale = Vector2( 1, 17.0781 )
+
+[node name="wall 5" parent="obstacles" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( -91.5, -117 )
+transform/scale = Vector2( 4.79688, 4.90625 )
+
+[node name="wall 6" parent="obstacles" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( -211, 172.5 )
+transform/scale = Vector2( 1, 4.32812 )
+
+[node name="wall7" parent="obstacles" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 148.5, 432.75 )
+transform/scale = Vector2( 3.26562, 2.33594 )
+
+[node name="wall 7" parent="obstacles" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 376, 241 )
+transform/rot = -38.0
+transform/scale = Vector2( 1, 8.44165 )
+
+[node name="wall 8" parent="obstacles" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 266, -164 )
+transform/scale = Vector2( 1, 5.4375 )
+
+[node name="hud_overlay" type="CanvasLayer" parent="."]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="fps_counter" type="Label" parent="hud_overlay"]
+
+rect/rotation = 41.68
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 33.0
+margin/top = 63.0
+margin/right = 94.0
+margin/bottom = 77.0
+text = "hey there"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+script/script = ExtResource( 11 )
+
+
+[editable path="obstacles/wall"]

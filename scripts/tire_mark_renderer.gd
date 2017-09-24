@@ -19,8 +19,6 @@ onready var points = Vector2Array()
 
 func _ready():
 	set_process(true)
-	print("printing points")
-	print(_get_points())
 
 func leave_marks(doIt):
 	if(doIt && !leavingMarks):
