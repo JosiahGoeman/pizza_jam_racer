@@ -10,10 +10,9 @@ const brakePower = 1000
 const baseSteerPower = 0.015	#steering power at starting speed
 const minSteerPower = 0.005		#steering power at end of intercal
 const steerInterval = 400		#speed at which steer is most restricted
-const steerSpeed = 0.1
-const rtcSpeed = 0.2
-const tireGrippiness = 7		#how much lateral force the car withstands before sliding
-const boostTireGrippiness = 5
+const steerSpeed = 0.075
+const rtcSpeed = 0.075
+const tireGrippiness = 420		#how much lateral force the car withstands before sliding
 const rollingFriction = 50		#how quickly the car slows down
 const minSkidmarkSpeed = 150
 
@@ -73,7 +72,7 @@ func _process(delta):
 	facingAngle += (steerAngle * forwardSpeed) * delta
 	sprite.set_rot(facingAngle)
 	
-	#accel/reverse
+	#accel/reverse/brake
 	var currentMaxSpeed = maxForwardSpeed
 	if(boost):
 		currentMaxSpeed = maxBoostSpeed
@@ -88,11 +87,8 @@ func _process(delta):
 	var right = get_right_direction()
 	var lateralForce = velocity.dot(right)
 	var currentTireGrip = tireGrippiness
-	#if(boost):
-		#currentTireGrip = boostTireGrippiness
 	var lateralCounterForce = clamp(-lateralForce, -currentTireGrip, currentTireGrip)
-	#if(abs(lateralForce) > currentTireGrip):
-		
+	velocity += right * lateralCounterForce * delta
 	
 	if(abs(lateralForce) > minSkidmarkSpeed):
 		facingAngle += angularVelocity * 0.5 * delta
@@ -100,7 +96,6 @@ func _process(delta):
 	else:
 		angularVelocity = 0
 		tireMarks.leave_marks(brake)
-	velocity += right * lateralCounterForce
 	
 	#rolling friction
 	var slowAmount = rollingFriction * delta
