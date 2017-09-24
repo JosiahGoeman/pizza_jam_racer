@@ -1,6 +1,6 @@
 extends Node2D
 
-const minSegmentLength = 20
+const minSegmentLength = 10
 const maxPoints = 1000
 const lineThickness = 2
 const lineFadeIntensity = 500.0

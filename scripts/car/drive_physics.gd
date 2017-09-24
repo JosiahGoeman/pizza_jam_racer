@@ -12,8 +12,9 @@ const minSteerPower = 0.005		#steering power at end of intercal
 const steerInterval = 400		#speed at which steer is most restricted
 const steerSpeed = 0.075
 const rtcSpeed = 0.075
-const tireGrippiness = 420		#how much lateral force the car withstands before sliding
+const tireGrippiness = 600		#how much lateral force the car withstands before sliding
 const rollingFriction = 50		#how quickly the car slows down
+const preserveDrift = 0.3
 const minSkidmarkSpeed = 150
 
 var velocity = Vector2()
@@ -26,7 +27,7 @@ onready var tireMarks = get_parent().get_node("tire_marks")
 var camera
 
 func _ready():
-	sprite = get_node("sprite")
+	sprite = get_node("sprite_body_primary")
 	camera = get_parent().get_node("camera")
 	set_process(true)
 	pass
@@ -91,7 +92,7 @@ func _process(delta):
 	velocity += right * lateralCounterForce * delta
 	
 	if(abs(lateralForce) > minSkidmarkSpeed):
-		facingAngle += angularVelocity * 0.5 * delta
+		facingAngle += angularVelocity * preserveDrift * delta
 		tireMarks.leave_marks(true)
 	else:
 		angularVelocity = 0
