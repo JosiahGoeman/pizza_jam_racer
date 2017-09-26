@@ -40,23 +40,10 @@ func _update_collision_polygon(val):
 	
 	var colliderShape = get_node("road_collider").get_node("road_shape")
 	for i in range(0, curvePointCount):
-		var prevPoint = curvePoints[(i-1) % curvePointCount]
-		if(i == 0):
-			prevPoint = curvePoints[curvePointCount-1]
 		var thisPoint = curvePoints[i]
-		var nextPoint = curvePoints[(i+1) % curvePointCount]
-		var nextNextPoint = curvePoints[(i+2) % curvePointCount]
 		
-		var prevForward = (thisPoint - prevPoint).normalized()
-		var forward = (nextPoint - thisPoint).normalized()
-		var nextForward = (nextNextPoint - nextPoint).normalized()
-		
-		var prevRight = Vector2(-prevForward.y, prevForward.x)
-		var right = Vector2(-forward.y, forward.x)
-		var nextRight = Vector2(-nextForward.y, nextForward.x)
-		
-		var thisNormal = (prevRight + right).normalized()
-		var nextNormal = (nextRight + right).normalized()
+		var thisNormal = _get_path_normal(curve, i)
+		var nextNormal = _get_path_normal(curve, (i+1)%curvePointCount)
 		
 		leftPoints.append(thisPoint + -thisNormal * roadWidth)
 		rightPoints.append(thisPoint + thisNormal * roadWidth)
@@ -75,23 +62,12 @@ func _draw():
 	#be textured
 	var roadPoints = Vector2Array()
 	for i in range(0, curvePointCount-1):
-		var prevPoint = curvePoints[(i-1) % curvePointCount]
-		if(i == 0):
-			prevPoint = curvePoints[curvePointCount-1]
 		var thisPoint = curvePoints[i]
 		var nextPoint = curvePoints[(i+1) % curvePointCount]
-		var nextNextPoint = curvePoints[(i+2) % curvePointCount]
 		
-		var prevForward = (thisPoint - prevPoint).normalized()
-		var forward = (nextPoint - thisPoint).normalized()
-		var nextForward = (nextNextPoint - nextPoint).normalized()
+		var thisNormal = _get_path_normal(curve, i)
+		var nextNormal = _get_path_normal(curve, (i+1) % curvePointCount)
 		
-		var prevRight = Vector2(-prevForward.y, prevForward.x)
-		var right = Vector2(-forward.y, forward.x)
-		var nextRight = Vector2(-nextForward.y, nextForward.x)
-		
-		var thisNormal = (prevRight + right).normalized()
-		var nextNormal = (nextRight + right).normalized()
 		roadPoints.resize(0)
 		roadPoints.append(nextPoint + -nextNormal * roadWidth)
 		roadPoints.append(nextPoint + nextNormal * roadWidth)
@@ -102,5 +78,28 @@ func _draw():
 		var roadUVs = [Vector2(0,0),Vector2(1,0),Vector2(1,1),Vector2(0,1)]
 		draw_colored_polygon(roadPoints, Color(1, 1, 1, 1), roadUVs,  roadTexture)
 		
-		#draw_circle(thisPoint + thisNormal * roadWidth, 5, Color(100, 0, 0))
-		#draw_circle(thisPoint + -thisNormal * roadWidth, 5, Color(100, 0, 0))
+		draw_circle(thisPoint + thisNormal * roadWidth, 5, Color(100, 0, 0))
+		draw_circle(thisPoint + -thisNormal * roadWidth, 5, Color(100, 0, 0))
+
+func _get_path_normal(curve, index):
+	var curvePoints = curve.get_baked_points()
+	var curvePointCount = curvePoints.size()
+	
+	var prevPoint = curvePoints[index-1]
+	if(index == 0):
+		prevPoint = curvePoints[curvePointCount-1]
+	var thisPoint = curvePoints[index]
+	var nextPoint = curvePoints[(index+1) % curvePointCount]
+	
+	var prevForward = (thisPoint - prevPoint).normalized()
+	var forward = (nextPoint - thisPoint).normalized()
+	
+	var prevRight = Vector2(-prevForward.y, prevForward.x)
+	var right = Vector2(-forward.y, forward.x)
+	
+	if(index == 0):
+		prevRight = right
+	if(index == curvePointCount-1):
+		right = prevRight
+		
+	return (prevRight + right).normalized()
