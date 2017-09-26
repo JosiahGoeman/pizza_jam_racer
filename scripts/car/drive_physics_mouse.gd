@@ -14,14 +14,17 @@ const skidGrip = 3				#how much the car resists lateral movement while sliding
 const rollingFriction = 50		#how quickly the car slows down when not accelerating
 const minSkidmarkSpeed = 150	#how fast the car needs to be sliding to leave skidmarks
 const colliderRadius = 10
+const offRoadSpeedReduction = 0.5
 
 var velocity = Vector2()
 var facingAngle = 0		#direction car is facing
 var steerAngle = 0
+var isOnRoad = false
 onready var spriteNode = get_node("sprites")				#reference to the sprite so we don't have to look it up every time
 onready var tireMarks = get_parent().get_node("tire_marks")
 onready var controlCircle = get_node("control_circle")
-onready var collider = get_node("collider")
+onready var wallCollider = get_node("wall_collider")
+onready var roadChecker = get_node("road_checker")
 
 func _ready():
 	set_process(true)
@@ -44,6 +47,14 @@ func _process(delta):
 	var forwardDirection = get_forward_direction()
 	var forwardSpeed = velocity.dot(forwardDirection)
 	
+	#check if car is on track or not
+	isOnRoad = false	#default to false
+	var overlapped = roadChecker.get_overlapping_bodies()
+	for i in range(0, overlapped.size()):
+		if(overlapped[i].get_name().begins_with("road_")):
+			isOnRoad = true
+			break
+	
 	#mouse control
 	if(Input.is_mouse_button_pressed(BUTTON_LEFT)):
 		#steer
@@ -57,6 +68,8 @@ func _process(delta):
 		var currentMaxSpeed = maxForwardSpeed
 		if(boost):
 			currentMaxSpeed = maxBoostSpeed
+		if(!isOnRoad):
+			currentMaxSpeed *= offRoadSpeedReduction
 		if(!brake && forwardSpeed < currentMaxSpeed):
 			velocity += forwardDirection * accelPower * nub.length() * delta
 		if(brake && forwardSpeed > -maxReverseSpeed):
@@ -96,9 +109,10 @@ func _process(delta):
 	set_pos(get_pos() + velocity * delta)
 	
 	#solve collisions
-	var overlapped = collider.get_overlapping_bodies()
+	var overlapped = wallCollider.get_overlapping_bodies()
 	for i in range(0, overlapped.size()):
-		handle_wall_collision(overlapped[i])
+		if(overlapped[i].get_name().begins_with("wall_")):
+			handle_wall_collision(overlapped[i])
 	
 	#debug drawing
 	#update()
@@ -110,7 +124,7 @@ func _draw():
 
 func handle_wall_collision(wall):
 	var polygon = wall.get_node("collision_polygon").get_polygon()
-	var wallMatrix = wall.get_relative_transform_to_parent(get_tree().get_root())
+	var wallMatrix = wall.get_relative_transform_to_parent(get_tree().get_root().get_node("root"))
 	var collisionPoint = _get_closest_point_on_polygon(polygon, wallMatrix, get_pos())
 	#closestpont = collisionPoint
 	var pos = get_pos()
