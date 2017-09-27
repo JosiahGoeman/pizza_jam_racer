@@ -20,7 +20,10 @@ var velocity = Vector2()
 var facingAngle = 0		#direction car is facing
 var steerAngle = 0
 var isOnRoad = false
+var framePhase = 0.0
 onready var spriteNode = get_node("sprites")				#reference to the sprite so we don't have to look it up every time
+onready var leftFrontWheel = spriteNode.get_node("left_front_wheel")
+onready var rightFrontWheel = spriteNode.get_node("right_front_wheel")
 onready var tireMarks = get_parent().get_node("tire_marks")
 onready var controlCircle = get_node("control_circle")
 onready var wallCollider = get_node("wall_collider")
@@ -82,6 +85,14 @@ func _process(delta):
 			velocity -= sign(forwardSpeed) * forwardDirection * brakePower * delta
 	
 	spriteNode.get_node("sprite_body_wheels").set_frame(0)
+	framePhase += delta * forwardSpeed/10
+	if(framePhase > 3):
+		framePhase = 0
+	print(framePhase)
+	for i in spriteNode.get_children():
+		i.set_frame(int(framePhase))
+	leftFrontWheel.set_rot(steerAngle/10)
+	rightFrontWheel.set_rot(steerAngle/10)
 	
 	#lateral friction (traction)
 	var right = get_right_direction()
