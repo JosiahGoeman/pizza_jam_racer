@@ -1,37 +1,49 @@
 extends Node2D
 
 #constants
-const maxForwardSpeed = 300
-const maxBoostSpeed = 500
+const maxForwardSpeed = 500
+const maxBoostSpeed = 650
 const maxReverseSpeed = 100
 const accelPower = 500
+const boostAccelPower = 1000
+const offRoadDrag = 2
 const reversePower = 500
 const brakePower = 500
 const steerSpeed = 5			#how fast car's steering turns to face nub
 const maxSteerAngle = 2.5		#how far the car can steer
 const skidBeginForce = 25		#how much lateral force the car withstands before sliding
 const skidGrip = 3				#how much the car resists lateral movement while sliding
-const rollingFriction = 50		#how quickly the car slows down when not accelerating
-const minSkidmarkSpeed = 150	#how fast the car needs to be sliding to leave skidmarks
+const rollingFriction = 100		#how quickly the car slows down when not accelerating
+const minSkidmarkSpeed = 50	#how fast the car needs to be sliding to leave skidmarks
 const colliderRadius = 10
-const offRoadSpeedReduction = 0.5
+const boostConsumeRate = 0.15
+const minLoopPitch = 0.5
+const maxLoopPitch = 3
 
 var velocity = Vector2()
 var facingAngle = 0		#direction car is facing
 var steerAngle = 0
-var isOnRoad = false
+var boostJuice = 1
+var onRoad = false
+var usingBoost = false
 var framePhase = 0.0
 onready var spriteNode = get_node("sprites")				#reference to the sprite so we don't have to look it up every time
 onready var leftFrontWheel = spriteNode.get_node("left_front_wheel")
 onready var rightFrontWheel = spriteNode.get_node("right_front_wheel")
+onready var boostEffect = spriteNode.get_node("boost_effect")
 onready var tireMarks = get_parent().get_node("tire_marks")
 onready var controlCircle = get_node("control_circle")
 onready var wallCollider = get_node("wall_collider")
 onready var roadChecker = get_node("road_checker")
+onready var boostMeter = get_tree().get_root().get_node("root").get_node("hud_overlay").get_node("boost_meter")
+onready var samplePlayer = get_node("sample_player")
+onready var engineLoop = get_node("engine_loop")
+onready var boostLoop = get_node("boost_loop")
+onready var particles = get_node("particles")
 
 func _ready():
+	engineLoop.play("engine_loop")
 	set_process(true)
-	set_fixed_process(true)
 
 #direction car is facing
 func get_forward_direction():
@@ -51,14 +63,23 @@ func _process(delta):
 	var forwardSpeed = velocity.dot(forwardDirection)
 	
 	#check if car is on track or not
-	isOnRoad = false	#default to false
+	onRoad = false	#default to false
 	var overlapped = roadChecker.get_overlapping_bodies()
 	for i in range(0, overlapped.size()):
 		if(overlapped[i].get_name().begins_with("road_")):
-			isOnRoad = true
-			break
+			onRoad = true
+		if(overlapped[i].get_name().begins_with("boost_refill")):
+			if(overlapped[i].try_pickup()):
+				if(boostJuice < 0 && usingBoost):
+					samplePlayer.stop_all()
+					samplePlayer.play("boost_start")
+					boostLoop.play("boost")
+					boostEffect.play()
+				boostJuice = 1
+				boostMeter.set_boost_level(boostJuice)
 	
 	#mouse control
+	steerAngle = 0
 	if(Input.is_mouse_button_pressed(BUTTON_LEFT)):
 		#steer
 		var nub = controlCircle.get_nub_pos()
@@ -66,15 +87,40 @@ func _process(delta):
 		steerAngle = clamp(steerAngle, -maxSteerAngle * velocity.length() / 50, maxSteerAngle * velocity.length() / 50)
 		facingAngle += steerAngle * delta
 		spriteNode.set_rot(facingAngle)
+		particles.set_pos(forwardDirection * -15)
+	
+		#boost
+		var boostKey = Input.is_key_pressed(KEY_SPACE)
+		if(boostKey && !usingBoost):
+			if(boostJuice >= 0):
+				samplePlayer.stop_all()
+				samplePlayer.play("boost_start")
+				boostLoop.play("boost")
+				boostEffect.play()
+			else:
+				samplePlayer.play("boost_fail")
+		if(!boostKey && usingBoost && boostJuice >= 0):
+			samplePlayer.play("boost_end")
+			boostLoop.stop_all()
+			particles.set_emitting(false)
+		usingBoost = boostKey
 	
 		#accel/reverse/brake
 		var currentMaxSpeed = maxForwardSpeed
-		if(boost):
+		var currentAccelPower = accelPower
+		if(usingBoost && boostJuice >= 0):
+			boostJuice -= boostConsumeRate * delta
+			particles.set_emitting(true)
+			if(boostJuice < 0):
+				samplePlayer.play("boost_end")
+				boostLoop.stop_all()
+				particles.set_emitting(false)
+				usingBoost = false
+			boostMeter.set_boost_level(boostJuice)
 			currentMaxSpeed = maxBoostSpeed
-		if(!isOnRoad):
-			currentMaxSpeed *= offRoadSpeedReduction
+			currentAccelPower = boostAccelPower
 		if(!brake && forwardSpeed < currentMaxSpeed):
-			velocity += forwardDirection * accelPower * nub.length() * delta
+			velocity += forwardDirection * currentAccelPower * nub.length() * delta
 		if(brake && forwardSpeed > -maxReverseSpeed):
 			velocity -= forwardDirection * reversePower * nub.length() * delta
 	elif(brake):
@@ -84,15 +130,21 @@ func _process(delta):
 		else:
 			velocity -= sign(forwardSpeed) * forwardDirection * brakePower * delta
 	
-	spriteNode.get_node("sprite_body_wheels").set_frame(0)
+	#animation
 	framePhase += delta * forwardSpeed/10
-	if(framePhase > 3):
+	if(framePhase > 2):
 		framePhase = 0
-	print(framePhase)
+	if(framePhase < 0):
+		framePhase = 2
 	for i in spriteNode.get_children():
 		i.set_frame(int(framePhase))
-	leftFrontWheel.set_rot(steerAngle/10)
-	rightFrontWheel.set_rot(steerAngle/10)
+	var wheelAngle = sign(forwardSpeed) * (steerAngle / 10)
+	leftFrontWheel.set_rot(wheelAngle)
+	rightFrontWheel.set_rot(wheelAngle)
+	
+	#loop pitch
+	var pitch = lerp(minLoopPitch, maxLoopPitch, abs(forwardSpeed)/maxForwardSpeed)
+	engineLoop.voice_set_pitch_scale(0, pitch)
 	
 	#lateral friction (traction)
 	var right = get_right_direction()
@@ -104,17 +156,24 @@ func _process(delta):
 	else:
 		velocity += right * lateralCounterForce * skidGrip * delta
 	
-	if(abs(lateralForce) > minSkidmarkSpeed):
-		tireMarks.leave_marks(true)
-	else:
-		tireMarks.leave_marks(brake && forwardSpeed > 0)
-	
 	#rolling friction
 	var slowAmount = rollingFriction * delta
 	if(velocity.length_squared() < slowAmount * slowAmount):
 		velocity = Vector2(0, 0)
 	else:
 		velocity -= velocity.normalized() * slowAmount
+	if(!onRoad):
+		velocity -= velocity * offRoadDrag * delta
+	
+	#tire marks
+	var leaveMarks = false
+	if(abs(lateralForce) > minSkidmarkSpeed):
+		leaveMarks = true
+	if(brake && forwardSpeed > 0):
+		leaveMarks = true
+	if(!onRoad):
+		leaveMarks = true
+	tireMarks.leave_marks(leaveMarks)
 	
 	#make move based on velocity
 	set_pos(get_pos() + velocity * delta)
@@ -124,20 +183,11 @@ func _process(delta):
 	for i in range(0, overlapped.size()):
 		if(overlapped[i].get_name().begins_with("wall_")):
 			handle_wall_collision(overlapped[i])
-	
-	#debug drawing
-	#update()
-
-var closestpont
-func _draw():
-	if(closestpont != null):
-		draw_circle(closestpont - get_pos(), 5, Color(100, 100, 0))
 
 func handle_wall_collision(wall):
 	var polygon = wall.get_node("collision_polygon").get_polygon()
 	var wallMatrix = wall.get_relative_transform_to_parent(get_tree().get_root().get_node("root"))
 	var collisionPoint = _get_closest_point_on_polygon(polygon, wallMatrix, get_pos())
-	#closestpont = collisionPoint
 	var pos = get_pos()
 	var collisionNormal = (collisionPoint-pos).normalized()
 	var penetrationDist = colliderRadius - (collisionPoint-pos).length()

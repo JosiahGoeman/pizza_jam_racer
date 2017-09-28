@@ -2,7 +2,7 @@ extends Node2D
 
 const minSegmentLength = 10
 const maxPoints = 1000
-const lineThickness = 2
+export var lineThickness = 2
 const lineFadeIntensity = 500.0
 const lineFadeMax = .5
 const p1Offset = Vector2(-5, -10)
