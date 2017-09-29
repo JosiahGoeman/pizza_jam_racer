@@ -11,10 +11,10 @@ const reversePower = 500
 const brakePower = 500
 const steerSpeed = 5			#how fast car's steering turns to face nub
 const maxSteerAngle = 2.5		#how far the car can steer
-const skidBeginForce = 25		#how much lateral force the car withstands before sliding
+const skidBeginForce = 1200		#how much lateral force the car withstands before sliding
 const skidGrip = 3				#how much the car resists lateral movement while sliding
 const rollingFriction = 100		#how quickly the car slows down when not accelerating
-const minSkidmarkSpeed = 50	#how fast the car needs to be sliding to leave skidmarks
+const minSkidmarkSpeed = skidBeginForce	#how fast the car needs to be sliding to leave skidmarks
 const colliderRadius = 10
 const boostConsumeRate = 0.15
 const minLoopPitch = 0.5
@@ -39,10 +39,13 @@ onready var boostMeter = get_tree().get_root().get_node("root").get_node("hud_ov
 onready var samplePlayer = get_node("sample_player")
 onready var engineLoop = get_node("engine_loop")
 onready var boostLoop = get_node("boost_loop")
+onready var squealLoop = get_node("squeal_loop")
 onready var particles = get_node("particles")
+onready var camera = get_node("camera")
 
 func _ready():
 	engineLoop.play("engine_loop")
+	squealLoop.play("tire_squeal_loop")
 	set_process(true)
 
 #direction car is facing
@@ -53,16 +56,37 @@ func get_forward_direction():
 func get_right_direction():
 	var forward = get_forward_direction()
 	return Vector2(-forward.y, forward.x)
-	
+
+func _set_boosting(val):
+	if(val):
+		samplePlayer.stop_all()
+		samplePlayer.play("boost_start")
+		boostLoop.play("boost")
+		boostEffect.play()
+		particles.set_emitting(true)
+		camera.set_shake_amount(5)
+		usingBoost = true
+	else:
+		samplePlayer.stop_all()
+		samplePlayer.play("boost_end")
+		boostLoop.stop_all()
+		boostEffect.play()
+		particles.set_emitting(false)
+		camera.set_shake_amount(0)
+		usingBoost = false
+
+var boostKeyPrev = false
+var leftMousePrev = false
 func _process(delta):
 	#grab input
 	var brake = Input.is_key_pressed(KEY_SHIFT)
-	var boost = Input.is_key_pressed(KEY_SPACE)
+	var boostKey = Input.is_key_pressed(KEY_SPACE)
+	var leftMouse = Input.is_mouse_button_pressed(BUTTON_LEFT)
 	
 	var forwardDirection = get_forward_direction()
 	var forwardSpeed = velocity.dot(forwardDirection)
 	
-	#check if car is on track or not
+	#check what things we're driving over
 	onRoad = false	#default to false
 	var overlapped = roadChecker.get_overlapping_bodies()
 	for i in range(0, overlapped.size()):
@@ -70,17 +94,14 @@ func _process(delta):
 			onRoad = true
 		if(overlapped[i].get_name().begins_with("boost_refill")):
 			if(overlapped[i].try_pickup()):
-				if(boostJuice < 0 && usingBoost):
-					samplePlayer.stop_all()
-					samplePlayer.play("boost_start")
-					boostLoop.play("boost")
-					boostEffect.play()
+				if(boostKey && boostJuice < 0):
+					_set_boosting(true)
 				boostJuice = 1
 				boostMeter.set_boost_level(boostJuice)
 	
 	#mouse control
 	steerAngle = 0
-	if(Input.is_mouse_button_pressed(BUTTON_LEFT)):
+	if(leftMouse):
 		#steer
 		var nub = controlCircle.get_nub_pos()
 		steerAngle = forwardDirection.angle_to(nub) * steerSpeed
@@ -89,21 +110,14 @@ func _process(delta):
 		spriteNode.set_rot(facingAngle)
 		particles.set_pos(forwardDirection * -15)
 	
-		#boost
-		var boostKey = Input.is_key_pressed(KEY_SPACE)
-		if(boostKey && !usingBoost):
+		#turn boost on/off
+		if(boostKey && (!boostKeyPrev || !leftMousePrev)):
 			if(boostJuice >= 0):
-				samplePlayer.stop_all()
-				samplePlayer.play("boost_start")
-				boostLoop.play("boost")
-				boostEffect.play()
+				_set_boosting(true)
 			else:
 				samplePlayer.play("boost_fail")
-		if(!boostKey && usingBoost && boostJuice >= 0):
-			samplePlayer.play("boost_end")
-			boostLoop.stop_all()
-			particles.set_emitting(false)
-		usingBoost = boostKey
+		if(!boostKey && boostKeyPrev && boostJuice >= 0):
+			_set_boosting(false)
 	
 		#accel/reverse/brake
 		var currentMaxSpeed = maxForwardSpeed
@@ -112,10 +126,7 @@ func _process(delta):
 			boostJuice -= boostConsumeRate * delta
 			particles.set_emitting(true)
 			if(boostJuice < 0):
-				samplePlayer.play("boost_end")
-				boostLoop.stop_all()
-				particles.set_emitting(false)
-				usingBoost = false
+				_set_boosting(false)
 			boostMeter.set_boost_level(boostJuice)
 			currentMaxSpeed = maxBoostSpeed
 			currentAccelPower = boostAccelPower
@@ -123,12 +134,17 @@ func _process(delta):
 			velocity += forwardDirection * currentAccelPower * nub.length() * delta
 		if(brake && forwardSpeed > -maxReverseSpeed):
 			velocity -= forwardDirection * reversePower * nub.length() * delta
-	elif(brake):
-		var speedReductionAmount = brakePower * delta
-		if(forwardSpeed < speedReductionAmount):
-			velocity -= forwardDirection * forwardSpeed
-		else:
-			velocity -= sign(forwardSpeed) * forwardDirection * brakePower * delta
+	else:
+		if(usingBoost && boostJuice >= 0):
+			_set_boosting(false)
+		if(brake):
+			var speedReductionAmount = brakePower * delta
+			if(forwardSpeed < speedReductionAmount):
+				velocity -= forwardDirection * forwardSpeed
+			else:
+				velocity -= sign(forwardSpeed) * forwardDirection * brakePower * delta
+	boostKeyPrev = boostKey
+	leftMousePrev = leftMouse
 	
 	#animation
 	framePhase += delta * forwardSpeed/10
@@ -151,9 +167,11 @@ func _process(delta):
 	var lateralForce = velocity.dot(right)
 	var currentTireGrip = skidBeginForce
 	var lateralCounterForce = -lateralForce#clamp(-lateralForce, -currentTireGrip, currentTireGrip)
-	if(abs(lateralForce) < skidBeginForce):
+	if(abs(lateralForce) < skidBeginForce * delta):
+		print("ok")
 		velocity += right * lateralCounterForce
 	else:
+		print("skidding")
 		velocity += right * lateralCounterForce * skidGrip * delta
 	
 	#rolling friction
@@ -167,10 +185,14 @@ func _process(delta):
 	
 	#tire marks
 	var leaveMarks = false
-	if(abs(lateralForce) > minSkidmarkSpeed):
+	if(abs(lateralForce) > minSkidmarkSpeed * delta && onRoad):
+		var volume = clamp(-40 + abs(lateralForce) / 6, -40, 0)
+		squealLoop.voice_set_volume_scale_db(0, volume)
 		leaveMarks = true
-	if(brake && forwardSpeed > 0):
-		leaveMarks = true
+	else:
+		squealLoop.voice_set_volume_scale_db(0, -60)
+	#if(brake && forwardSpeed > 0):
+		#leaveMarks = true
 	if(!onRoad):
 		leaveMarks = true
 	tireMarks.leave_marks(leaveMarks)
