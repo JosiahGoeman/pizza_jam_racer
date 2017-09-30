@@ -2,10 +2,8 @@ extends Node2D
 
 #constants
 const maxForwardSpeed = 500
-const maxBoostSpeed = 650
 const maxReverseSpeed = 100
 const accelPower = 500
-const boostAccelPower = 1000
 const offRoadDrag = 2
 const reversePower = 500
 const brakePower = 500
@@ -15,41 +13,50 @@ const skidBeginForce = 1200		#how much lateral force the car withstands before s
 const skidGrip = 3				#how much the car resists lateral movement while sliding
 const rollingFriction = 100		#how quickly the car slows down when not accelerating
 const minSkidmarkSpeed = skidBeginForce	#how fast the car needs to be sliding to leave skidmarks
-const colliderRadius = 10
-const boostConsumeRate = 0.15
+const colliderRadius = 20
 const minLoopPitch = 0.5
 const maxLoopPitch = 3
+const tauntPeriod = 2
+const speedForImpactSount = 50
+const minImpactSoundTime = 0.25
 
 var velocity = Vector2()
-var facingAngle = 0		#direction car is facing
+export var facingAngle = 0 setget _change_face_angle		#direction car is facing
 var steerAngle = 0
-var boostJuice = 1
 var onRoad = false
-var usingBoost = false
 var framePhase = 0.0
+var tauntTimer = tauntPeriod
+var impactSoundTimer = 0
 
 #node references
+onready var rootNode = get_tree().get_root().get_node("root")
 onready var spriteNode = get_node("sprites")				#reference to the sprite so we don't have to look it up every time
 onready var leftFrontWheel = spriteNode.get_node("left_front_wheel")
 onready var rightFrontWheel = spriteNode.get_node("right_front_wheel")
 onready var boostEffect = spriteNode.get_node("boost_effect")
 onready var tireMarks = get_parent().get_node("tire_marks")
-onready var controlCircle = get_node("control_circle")
 onready var wallCollider = get_node("wall_collider")
 onready var roadChecker = get_node("road_checker")
-onready var boostMeter = get_tree().get_root().get_node("root").get_node("hud_overlay").get_node("boost_meter")
+onready var boostMeter = rootNode.get_node("hud_overlay").get_node("boost_meter")
 onready var samplePlayer = get_node("sample_player")
 onready var engineLoop = get_node("engine_loop")
 onready var boostLoop = get_node("boost_loop")
 onready var squealLoop = get_node("squeal_loop")
 onready var particles = get_node("particles")
-onready var camera = get_node("camera")
+onready var tauntLabel = get_node("taunt_label")
+
+func _change_face_angle(val):
+	facingAngle = val * 0.0174533
 
 func _on_ready():
 	set_process(true)
 
 func _process(delta):
-	print("super")
+	tauntTimer += delta
+	if(tauntTimer > tauntPeriod):
+		tauntLabel.hide()
+	
+	impactSoundTimer += delta
 	
 	onRoad = _check_road()
 	
@@ -65,13 +72,14 @@ func _process(delta):
 	var forwardSpeed = velocity.dot(get_forward_direction())
 	
 	#animation
+	spriteNode.set_rot(facingAngle)
 	framePhase += delta * forwardSpeed/10
 	if(framePhase > 2):
 		framePhase = 0
 	if(framePhase < 0):
 		framePhase = 2
-	for i in spriteNode.get_children():
-		i.set_frame(int(framePhase))	#bug! creates errors on sprites with one frame
+	#for i in spriteNode.get_children():
+		#i.set_frame(int(framePhase))	#bug! creates errors on sprites with one frame
 	var wheelAngle = sign(forwardSpeed) * (steerAngle / 10)
 	leftFrontWheel.set_rot(wheelAngle)
 	rightFrontWheel.set_rot(wheelAngle)
@@ -107,7 +115,22 @@ func _process(delta):
 	var overlapped = wallCollider.get_overlapping_bodies()
 	for i in range(0, overlapped.size()):
 		if(overlapped[i].get_name().begins_with("wall_")):
-			handle_wall_collision(overlapped[i])
+			_handle_wall_collision(overlapped[i])
+		if(overlapped[i].get_name().begins_with("car_")):
+			var otherCar = overlapped[i].get_parent()
+			if(otherCar != self):
+				_handle_car_collision(otherCar)
+
+func _taunt(message):
+	tauntTimer = 0
+	tauntLabel.set_bbcode("[center]" + message + "[/center]")
+	tauntLabel.show()
+
+func _taunt_random(messages):
+	if(tauntTimer < tauntPeriod):
+		return
+	randomize()
+	_taunt(messages[randi()%messages.size()])
 
 func _get_touched_nodes(name):
 	var nodes = []
@@ -129,17 +152,33 @@ func get_right_direction():
 	var forward = get_forward_direction()
 	return Vector2(-forward.y, forward.x)
 
+func _handle_car_collision(otherCar):
+	var diff = otherCar.get_pos() - get_pos()
+	var collisionNormal = diff.normalized()
+	var penetrationDepth = colliderRadius - diff.length()
+	if(penetrationDepth > 0):
+		set_pos(get_pos() - collisionNormal * penetrationDepth)
+		var vellDiff = velocity - otherCar.velocity
+		velocity -= collisionNormal * vellDiff.dot(collisionNormal) * 1.5
+		if(impactSoundTimer > minImpactSoundTime):
+			impactSoundTimer = 0
+			samplePlayer.play("impact")
+
 #push car out of walls
-func handle_wall_collision(wall):
-	var polygon = wall.get_node("collision_polygon").get_polygon()
-	var wallMatrix = wall.get_relative_transform_to_parent(get_tree().get_root().get_node("root"))
+func _handle_wall_collision(wall):
+	var polygonNode = wall.get_node("collision_polygon")
+	var polygon = polygonNode.get_polygon()
+	var wallMatrix = polygonNode.get_relative_transform_to_parent(get_tree().get_root().get_node("root"))
 	var collisionPoint = _get_closest_point_on_polygon(polygon, wallMatrix, get_pos())
 	var pos = get_pos()
 	var collisionNormal = (collisionPoint-pos).normalized()
 	var penetrationDist = colliderRadius - (collisionPoint-pos).length()
 	if(penetrationDist > 0):
 		set_pos(pos - collisionNormal * penetrationDist)
-		velocity -= collisionNormal * velocity.dot(collisionNormal)
+		velocity -= collisionNormal * velocity.dot(collisionNormal) * 1.5	#bounce a little
+		
+		if(abs(velocity.dot(collisionNormal)) > speedForImpactSount):
+			samplePlayer.play("impact")
 
 #returns the closest point on the surface of "polygon" to a given point "to"
 func _get_closest_point_on_polygon(polygon, polyTransMatrix, to):

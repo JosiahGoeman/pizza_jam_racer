@@ -1,5 +1,15 @@
 extends "res://scripts/car/car_base.gd"
 
+const maxBoostSpeed = 650
+const boostAccelPower = 1000
+const boostConsumeRate = 0.25
+
+var usingBoost = false
+var boostJuice = 1
+
+onready var controlCircle = get_node("control_circle")
+onready var camera = get_node("camera")
+
 func _ready():
 	engineLoop.play("engine_loop")
 	squealLoop.play("tire_squeal_loop")
@@ -26,12 +36,12 @@ func _set_boosting(val):
 var boostKeyPrev = false
 var leftMousePrev = false
 func _process(delta):
-	print("child")
-	print(" ")
+	if(rootNode.raceState != rootNode.RACE_STATES.IN_PROGRESS):
+		return
 	
 	#grab input
 	var brake = Input.is_key_pressed(KEY_SHIFT)
-	var boostKey = Input.is_key_pressed(KEY_SPACE)
+	var boostKey = Input.is_mouse_button_pressed(BUTTON_RIGHT)
 	var leftMouse = Input.is_mouse_button_pressed(BUTTON_LEFT)
 	
 	var forwardDirection = get_forward_direction()
@@ -43,9 +53,10 @@ func _process(delta):
 		if(i.try_pickup()):
 			if(boostKey && boostJuice < 0):
 				_set_boosting(true)
+			samplePlayer.play("pickup")
 			boostJuice = 1
 			boostMeter.set_boost_level(boostJuice)
-	
+
 	#mouse control
 	steerAngle = 0
 	if(leftMouse):
@@ -54,7 +65,6 @@ func _process(delta):
 		steerAngle = forwardDirection.angle_to(nub) * steerSpeed
 		steerAngle = clamp(steerAngle, -maxSteerAngle * velocity.length() / 50, maxSteerAngle * velocity.length() / 50)
 		facingAngle += steerAngle * delta
-		spriteNode.set_rot(facingAngle)
 		particles.set_pos(forwardDirection * -15)
 	
 		#turn boost on/off

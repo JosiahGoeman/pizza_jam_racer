@@ -78,7 +78,7 @@ func _draw():
 		var roadUVs = [Vector2(0,0),Vector2(1,0),Vector2(1,1),Vector2(0,1)]
 		draw_colored_polygon(roadPoints, Color(1, 1, 1, 1), roadUVs,  roadTexture)
 		
-		draw_circle(thisPoint, 5, Color(1, 0, 0, 1))
+		#draw_circle(thisPoint, 5, Color(1, 0, 0, 1))
 		#draw_circle(thisPoint + thisNormal * roadWidth, 5, Color(100, 0, 0))
 		#draw_circle(thisPoint + -thisNormal * roadWidth, 5, Color(100, 0, 0))
 
