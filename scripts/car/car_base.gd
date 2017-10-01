@@ -16,17 +16,24 @@ const minSkidmarkSpeed = skidBeginForce	#how fast the car needs to be sliding to
 const colliderRadius = 20
 const minLoopPitch = 0.5
 const maxLoopPitch = 3
-const tauntPeriod = 2
 const speedForImpactSount = 50
 const minImpactSoundTime = 0.25
+const maxFloat = 3.402823e+38
 
 var velocity = Vector2()
 export var facingAngle = 0 setget _change_face_angle		#direction car is facing
 var steerAngle = 0
 var onRoad = false
 var framePhase = 0.0
+var overlappedBodies = []
+var tauntPeriod = 2
 var tauntTimer = tauntPeriod
 var impactSoundTimer = 0
+var bestLapTime = maxFloat
+var currentLapTime = 0
+var totalTime = 0
+var touchedCheckpoint = false
+var lapsCompleted = 0
 
 #node references
 onready var rootNode = get_tree().get_root().get_node("root")
@@ -34,10 +41,9 @@ onready var spriteNode = get_node("sprites")				#reference to the sprite so we d
 onready var leftFrontWheel = spriteNode.get_node("left_front_wheel")
 onready var rightFrontWheel = spriteNode.get_node("right_front_wheel")
 onready var boostEffect = spriteNode.get_node("boost_effect")
-onready var tireMarks = get_parent().get_node("tire_marks")
+onready var tireMarks = get_node("tire_marks")
 onready var wallCollider = get_node("wall_collider")
 onready var roadChecker = get_node("road_checker")
-onready var boostMeter = rootNode.get_node("hud_overlay").get_node("boost_meter")
 onready var samplePlayer = get_node("sample_player")
 onready var engineLoop = get_node("engine_loop")
 onready var boostLoop = get_node("boost_loop")
@@ -58,7 +64,20 @@ func _process(delta):
 	
 	impactSoundTimer += delta
 	
-	onRoad = _check_road()
+	currentLapTime += delta
+	totalTime += delta
+	
+	overlappedBodies = roadChecker.get_overlapping_bodies()
+	onRoad = _get_touched_nodes("road_").size() > 0
+	
+	if(_get_touched_nodes("checkpoint").size() > 0):
+		touchedCheckpoint = true
+	if(_get_touched_nodes("finishline").size() > 0 && touchedCheckpoint):
+		if(currentLapTime < bestLapTime):
+			bestLapTime = currentLapTime
+		currentLapTime = 0
+		touchedCheckpoint = false
+		lapsCompleted += 1
 	
 	#rolling friction
 	var slowAmount = rollingFriction * delta
@@ -106,10 +125,14 @@ func _process(delta):
 		#leaveMarks = true
 	if(!onRoad):
 		leaveMarks = true
-	tireMarks.leave_marks(leaveMarks)
+	get_node("tire_marks").leave_marks(leaveMarks)
+	
+	#loop pitch
+	var pitch = lerp(minLoopPitch, maxLoopPitch, abs(forwardSpeed)/maxForwardSpeed)
+	engineLoop.voice_set_pitch_scale(0, pitch)
 	
 	#make move based on velocity
-	set_pos(get_pos() + velocity * delta)
+	set_global_pos(get_global_pos() + velocity * delta)
 	
 	#solve collisions
 	var overlapped = wallCollider.get_overlapping_bodies()
@@ -121,27 +144,24 @@ func _process(delta):
 			if(otherCar != self):
 				_handle_car_collision(otherCar)
 
-func _taunt(message):
+func _taunt(message, time):
 	tauntTimer = 0
+	tauntPeriod = time
 	tauntLabel.set_bbcode("[center]" + message + "[/center]")
 	tauntLabel.show()
 
-func _taunt_random(messages):
+func _taunt_random(messages, time):
 	if(tauntTimer < tauntPeriod):
 		return
 	randomize()
-	_taunt(messages[randi()%messages.size()])
+	_taunt(messages[randi()%messages.size()], time)
 
 func _get_touched_nodes(name):
 	var nodes = []
-	var overlappedBodies = roadChecker.get_overlapping_bodies()
 	for i in range(0, overlappedBodies.size()):
 		if(overlappedBodies[i].get_name().begins_with(name)):
 			nodes.append(overlappedBodies[i])
 	return nodes
-
-func _check_road():
-	return _get_touched_nodes("road_").size() > 0
 
 #direction car is facing
 func get_forward_direction():
@@ -153,7 +173,7 @@ func get_right_direction():
 	return Vector2(-forward.y, forward.x)
 
 func _handle_car_collision(otherCar):
-	var diff = otherCar.get_pos() - get_pos()
+	var diff = otherCar.get_global_pos() - get_global_pos()
 	var collisionNormal = diff.normalized()
 	var penetrationDepth = colliderRadius - diff.length()
 	if(penetrationDepth > 0):
@@ -169,12 +189,12 @@ func _handle_wall_collision(wall):
 	var polygonNode = wall.get_node("collision_polygon")
 	var polygon = polygonNode.get_polygon()
 	var wallMatrix = polygonNode.get_relative_transform_to_parent(get_tree().get_root().get_node("root"))
-	var collisionPoint = _get_closest_point_on_polygon(polygon, wallMatrix, get_pos())
-	var pos = get_pos()
+	var pos = get_global_pos()
+	var collisionPoint = _get_closest_point_on_polygon(polygon, wallMatrix, pos)
 	var collisionNormal = (collisionPoint-pos).normalized()
 	var penetrationDist = colliderRadius - (collisionPoint-pos).length()
 	if(penetrationDist > 0):
-		set_pos(pos - collisionNormal * penetrationDist)
+		set_global_pos(pos - collisionNormal * penetrationDist)
 		velocity -= collisionNormal * velocity.dot(collisionNormal) * 1.5	#bounce a little
 		
 		if(abs(velocity.dot(collisionNormal)) > speedForImpactSount):
@@ -189,7 +209,7 @@ func _get_closest_point_on_polygon(polygon, polyTransMatrix, to):
 	
 	#find the closest point on each line segment, and pick the closest of them
 	var closestPoint
-	var distSqToClosest = 3.402823e+38
+	var distSqToClosest = maxFloat
 	for i in range(0, polygon.size()):
 		var potentialPoint = _get_closest_point_on_line_segment(polygon[i], polygon[(i+1)%polygon.size()], polySpaceTo)
 		var distSq = polySpaceTo.distance_squared_to(potentialPoint)

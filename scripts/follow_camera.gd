@@ -27,7 +27,7 @@ func _process(delta):
 		shakeOffset.y = randf() * screenShakeAmount - screenShakeAmount / 2
 	
 	var canvasTransform = get_viewport().get_canvas_transform()
-	canvasTransform[2] = ((-target.get_pos()+shakeOffset)*zoom + screenSize / 2)
+	canvasTransform[2] = ((-target.get_global_pos()+shakeOffset)*zoom + screenSize / 2)
 	canvasTransform[0] = Vector2(zoom, 0)
 	canvasTransform[1] = Vector2(0, zoom)
 	get_viewport().set_canvas_transform(canvasTransform)

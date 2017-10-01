@@ -10,7 +10,7 @@ const p2Offset = Vector2(5, -10)
 const p3Offset = Vector2(-5, 10)
 const p4Offset = Vector2(5, 10)
 
-onready var car = get_parent().get_node("car")
+onready var car = get_parent()
 var prevCarPos
 var prevPoints
 var leavingMarks
@@ -38,7 +38,9 @@ func _get_points():
 	])
 
 func _process(delta):
-	var currentCarPos = car.get_pos()
+	set_global_pos(Vector2())
+	
+	var currentCarPos = car.get_global_pos()
 	if(leavingMarks
 	&& (currentCarPos-prevCarPos).length_squared() > minSegmentLength * minSegmentLength):
 		var points = _get_points()

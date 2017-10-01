@@ -9,6 +9,9 @@ var boostJuice = 1
 
 onready var controlCircle = get_node("control_circle")
 onready var camera = get_node("camera")
+onready var boostMeter = get_node("hud_overlay").get_node("boost_meter")
+onready var winScreen = get_node("hud_overlay").get_node("win_screen")
+onready var loseScreen = get_node("hud_overlay").get_node("lose_screen")
 
 func _ready():
 	engineLoop.play("engine_loop")
@@ -36,8 +39,17 @@ func _set_boosting(val):
 var boostKeyPrev = false
 var leftMousePrev = false
 func _process(delta):
-	if(rootNode.raceState != rootNode.RACE_STATES.IN_PROGRESS):
+	#print(get_parent())
+	#print(get_parent().get_node("hud_overlay"))
+	#for i in get_parent().get_node("hud_overlay").get_children():
+		#print(i.get_name())
+	#print(get_parent().get_node("hud_overlay").get_node("win_screen"))
+	if(rootNode.raceState == rootNode.RACE_STATES.STARTING ||
+	rootNode.raceState == rootNode.RACE_STATES.COUNTDOWN):
 		return
+	
+	if(rootNode.raceState == rootNode.RACE_STATES.TUTORIAL):
+		boostJuice = 1
 	
 	#grab input
 	var brake = Input.is_key_pressed(KEY_SHIFT)
@@ -103,6 +115,11 @@ func _process(delta):
 	boostKeyPrev = boostKey
 	leftMousePrev = leftMouse
 	
-	#loop pitch
-	var pitch = lerp(minLoopPitch, maxLoopPitch, abs(forwardSpeed)/maxForwardSpeed)
-	engineLoop.voice_set_pitch_scale(0, pitch)
+	if(lapsCompleted == 1):
+		if(rootNode.raceState == rootNode.RACE_STATES.IN_PROGRESS):
+			rootNode.set_race_state(rootNode.RACE_STATES.WIN)
+			winScreen.show()
+			
+	if(rootNode.raceState == rootNode.RACE_STATES.LOSE_STILL_FINISHING):
+		rootNode.set_race_state(rootNode.RACE_STATES.LOSE)
+		loseScreen.show()

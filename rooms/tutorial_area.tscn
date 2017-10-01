@@ -1,0 +1,572 @@
+[gd_scene load_steps=35 format=1]
+
+[ext_resource path="res://scripts/global.gd" type="Script" id=1]
+[ext_resource path="res://prefabs/player_car.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/wall_maker.gd" type="Script" id=3]
+[ext_resource path="res://textures/texture_wall_pillars.png" type="Texture" id=4]
+[ext_resource path="res://textures/texture_pavement.png" type="Texture" id=5]
+[ext_resource path="res://textures/texture_grass.png" type="Texture" id=6]
+[ext_resource path="res://scripts/scene_trigger.gd" type="Script" id=7]
+
+[sub_resource type="ConvexPolygonShape2D" id=51]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -2100, -2500, -1200, -2500, -1200, -2100, -1800, -1700 )
+
+[sub_resource type="ConvexPolygonShape2D" id=52]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -1300, -900, -1200, -800, -1200, -700, -2100, -700, -1800, -900 )
+
+[sub_resource type="ConvexPolygonShape2D" id=53]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -1900, -1000, -1800, -900, -2100, -700 )
+
+[sub_resource type="ConvexPolygonShape2D" id=54]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -1900, -1000, -2100, -700, -2100, -2500, -1900, -1600 )
+
+[sub_resource type="ConvexPolygonShape2D" id=55]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -1800, -1700, -1900, -1600, -2100, -2500 )
+
+[sub_resource type="ConvexPolygonShape2D" id=56]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -1800, -1700, -1200, -2100, -1100, -2000 )
+
+[sub_resource type="ConvexPolygonShape2D" id=57]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -500, -1700, -1800, -1700, -1100, -2000, -500, -2000, -400, -1900, -400, -1800 )
+
+[sub_resource type="ConvexPolygonShape2D" id=68]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 100, -700, -800, -700, -800, -1100, -200, -1400 )
+
+[sub_resource type="ConvexPolygonShape2D" id=69]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -900, -1200, -1500, -1200, -1600, -1300, -1500, -1400, -200, -1400 )
+
+[sub_resource type="ConvexPolygonShape2D" id=70]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -800, -1100, -900, -1200, -200, -1400 )
+
+[sub_resource type="ConvexPolygonShape2D" id=71]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -700, -2300, -800, -2400, -800, -2500, 100, -2500, -200, -2300 )
+
+[sub_resource type="ConvexPolygonShape2D" id=72]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -100, -2200, -200, -2300, 100, -2500 )
+
+[sub_resource type="ConvexPolygonShape2D" id=73]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -100, -2200, 100, -2500, 100, -700, -100, -1500 )
+
+[sub_resource type="ConvexPolygonShape2D" id=74]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 100, -700, -200, -1400, -100, -1500 )
+
+[sub_resource type="ConvexPolygonShape2D" id=36]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -2100, -700, -1200, -700, -1200, -600, -1300, -500, -2100, -500 )
+
+[sub_resource type="ConvexPolygonShape2D" id=50]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -700, -500, -800, -600, -800, -700, 100, -700, 100, -500 )
+
+[sub_resource type="ConvexPolygonShape2D" id=65]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 0, -500, 0, 600, -100, 500, -100, -500 )
+
+[sub_resource type="ConvexPolygonShape2D" id=66]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 100, -500, 100, 500, 0, 600, 0, -500 )
+
+[sub_resource type="ConvexPolygonShape2D" id=67]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 1000, 0, 1000, 100, -1000, 100, -1000, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=75]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -380, -564, -566, -564, -630, -688, -475, -803, -353, -688 )
+
+[sub_resource type="ConvexPolygonShape2D" id=76]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -292, -471, -336, -379, -477, -320, -608, -405, -566, -564, -380, -564 )
+
+[sub_resource type="ConvexPolygonShape2D" id=77]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -53, -786, -353, -688, -475, -803, -173, -884, 178, -910 )
+
+[sub_resource type="ConvexPolygonShape2D" id=78]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 182, -767, -53, -786, 178, -910, 641, -864 )
+
+[sub_resource type="ConvexPolygonShape2D" id=79]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 604, -686, 182, -767, 641, -864, 800, -723 )
+
+[sub_resource type="ConvexPolygonShape2D" id=80]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 813, -320, 619, -388, 569, -519, 571, -595, 604, -686, 800, -723, 909, -536, 889, -397 )
+
+[sub_resource type="ConvexPolygonShape2D" id=81]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 1000, -2500, 1000, 500, -1000, 500, -1000, -2500 )
+
+[sub_resource type="ConvexPolygonShape2D" id=82]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -300, 100, -300, -300, 300, -300, 300, 100 )
+
+[node name="root" type="Node2D"]
+
+script/script = ExtResource( 1 )
+raceState = 0
+
+[node name="player_car" parent="." instance=ExtResource( 2 )]
+
+[node name="obstacles" type="Node2D" parent="."]
+
+[node name="wall_maze_left" type="StaticBody2D" parent="obstacles"]
+
+editor/display_folded = true
+input/pickable = false
+shapes/0/shape = SubResource( 51 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/0/trigger = false
+shapes/1/shape = SubResource( 52 )
+shapes/1/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/1/trigger = false
+shapes/2/shape = SubResource( 53 )
+shapes/2/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/2/trigger = false
+shapes/3/shape = SubResource( 54 )
+shapes/3/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/3/trigger = false
+shapes/4/shape = SubResource( 55 )
+shapes/4/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/4/trigger = false
+shapes/5/shape = SubResource( 56 )
+shapes/5/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/5/trigger = false
+shapes/6/shape = SubResource( 57 )
+shapes/6/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/6/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="collision_polygon" type="CollisionPolygon2D" parent="obstacles/wall_maze_left"]
+
+transform/pos = Vector2( 1000, 0 )
+build_mode = 0
+polygon = Vector2Array( -1200, -700, -1200, -800, -1300, -900, -1800, -900, -1900, -1000, -1900, -1600, -1800, -1700, -500, -1700, -400, -1800, -400, -1900, -500, -2000, -1100, -2000, -1200, -2100, -1200, -2500, -2100, -2500, -2100, -700 )
+shape_range = Vector2( 0, 6 )
+trigger = false
+script/script = ExtResource( 3 )
+wallHeight = 25
+wallTextureScale = 50
+topTextureScale = 50
+wallTexture = ExtResource( 4 )
+topTexture = ExtResource( 5 )
+
+[node name="wall_maze_right" type="StaticBody2D" parent="obstacles"]
+
+editor/display_folded = true
+input/pickable = false
+shapes/0/shape = SubResource( 68 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/0/trigger = false
+shapes/1/shape = SubResource( 69 )
+shapes/1/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/1/trigger = false
+shapes/2/shape = SubResource( 70 )
+shapes/2/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/2/trigger = false
+shapes/3/shape = SubResource( 71 )
+shapes/3/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/3/trigger = false
+shapes/4/shape = SubResource( 72 )
+shapes/4/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/4/trigger = false
+shapes/5/shape = SubResource( 73 )
+shapes/5/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/5/trigger = false
+shapes/6/shape = SubResource( 74 )
+shapes/6/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/6/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="collision_polygon" type="CollisionPolygon2D" parent="obstacles/wall_maze_right"]
+
+transform/pos = Vector2( 1000, 0 )
+build_mode = 0
+polygon = Vector2Array( -800, -700, -800, -1100, -900, -1200, -1500, -1200, -1600, -1300, -1500, -1400, -200, -1400, -100, -1500, -100, -2200, -200, -2300, -700, -2300, -800, -2400, -800, -2500, 100, -2500, 100, -700 )
+shape_range = Vector2( 0, 6 )
+trigger = false
+script/script = ExtResource( 3 )
+wallHeight = 25
+wallTextureScale = 50
+topTextureScale = 50
+wallTexture = ExtResource( 4 )
+topTexture = ExtResource( 5 )
+
+[node name="wall_top_left" type="StaticBody2D" parent="obstacles"]
+
+editor/display_folded = true
+input/pickable = false
+shapes/0/shape = SubResource( 36 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="collision_polygon" type="CollisionPolygon2D" parent="obstacles/wall_top_left"]
+
+transform/pos = Vector2( 1000, 0 )
+build_mode = 0
+polygon = Vector2Array( -2100, -500, -1300, -500, -1200, -600, -1200, -700, -2100, -700 )
+shape_range = Vector2( 0, 0 )
+trigger = false
+script/script = ExtResource( 3 )
+wallHeight = 25
+wallTextureScale = 50
+topTextureScale = 50
+wallTexture = ExtResource( 4 )
+topTexture = ExtResource( 5 )
+
+[node name="wall_top_right" type="StaticBody2D" parent="obstacles"]
+
+editor/display_folded = true
+input/pickable = false
+shapes/0/shape = SubResource( 50 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="collision_polygon" type="CollisionPolygon2D" parent="obstacles/wall_top_right"]
+
+transform/pos = Vector2( 1000, 0 )
+build_mode = 0
+polygon = Vector2Array( 100, -500, 100, -700, -800, -700, -800, -600, -700, -500 )
+shape_range = Vector2( 0, 0 )
+trigger = false
+script/script = ExtResource( 3 )
+wallHeight = 25
+wallTextureScale = 50
+topTextureScale = 50
+wallTexture = ExtResource( 4 )
+topTexture = ExtResource( 5 )
+
+[node name="wall_left" type="StaticBody2D" parent="obstacles"]
+
+editor/display_folded = true
+input/pickable = false
+shapes/0/shape = SubResource( 65 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, -1000, 0 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="collision_polygon" type="CollisionPolygon2D" parent="obstacles/wall_left"]
+
+transform/pos = Vector2( -1000, 0 )
+build_mode = 0
+polygon = Vector2Array( -100, -500, -100, 500, 0, 600, 0, -500 )
+shape_range = Vector2( 0, 0 )
+trigger = false
+script/script = ExtResource( 3 )
+wallHeight = 25
+wallTextureScale = 50
+topTextureScale = 50
+wallTexture = ExtResource( 4 )
+topTexture = ExtResource( 5 )
+
+[node name="wall_right" type="StaticBody2D" parent="obstacles"]
+
+editor/display_folded = true
+input/pickable = false
+shapes/0/shape = SubResource( 66 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 1000, 0 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="collision_polygon" type="CollisionPolygon2D" parent="obstacles/wall_right"]
+
+transform/pos = Vector2( 1000, 0 )
+build_mode = 0
+polygon = Vector2Array( 0, -500, 0, 600, 100, 500, 100, -500 )
+shape_range = Vector2( 0, 0 )
+trigger = false
+script/script = ExtResource( 3 )
+wallHeight = 25
+wallTextureScale = 50
+topTextureScale = 50
+wallTexture = ExtResource( 4 )
+topTexture = ExtResource( 5 )
+
+[node name="wall_bottom" type="StaticBody2D" parent="obstacles"]
+
+editor/display_folded = true
+input/pickable = false
+shapes/0/shape = SubResource( 67 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 500 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="collision_polygon" type="CollisionPolygon2D" parent="obstacles/wall_bottom"]
+
+transform/pos = Vector2( 0, 500 )
+build_mode = 0
+polygon = Vector2Array( -1000, 0, -1000, 100, 1000, 100, 1000, 0 )
+shape_range = Vector2( 0, 0 )
+trigger = false
+script/script = ExtResource( 3 )
+wallHeight = 25
+wallTextureScale = 50
+topTextureScale = 50
+wallTexture = ExtResource( 4 )
+topTexture = ExtResource( 5 )
+
+[node name="wall_island" type="StaticBody2D" parent="obstacles"]
+
+editor/display_folded = true
+input/pickable = false
+shapes/0/shape = SubResource( 75 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, -100, 525 )
+shapes/0/trigger = false
+shapes/1/shape = SubResource( 76 )
+shapes/1/transform = Matrix32( 1, 0, 0, 1, -100, 525 )
+shapes/1/trigger = false
+shapes/2/shape = SubResource( 77 )
+shapes/2/transform = Matrix32( 1, 0, 0, 1, -100, 525 )
+shapes/2/trigger = false
+shapes/3/shape = SubResource( 78 )
+shapes/3/transform = Matrix32( 1, 0, 0, 1, -100, 525 )
+shapes/3/trigger = false
+shapes/4/shape = SubResource( 79 )
+shapes/4/transform = Matrix32( 1, 0, 0, 1, -100, 525 )
+shapes/4/trigger = false
+shapes/5/shape = SubResource( 80 )
+shapes/5/transform = Matrix32( 1, 0, 0, 1, -100, 525 )
+shapes/5/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="collision_polygon" type="CollisionPolygon2D" parent="obstacles/wall_island"]
+
+transform/pos = Vector2( -100, 525 )
+build_mode = 0
+polygon = Vector2Array( -475, -803, -630, -688, -566, -564, -608, -405, -477, -320, -336, -379, -292, -471, -380, -564, -353, -688, -53, -786, 182, -767, 604, -686, 571, -595, 569, -519, 619, -388, 813, -320, 889, -397, 909, -536, 800, -723, 641, -864, 178, -910, -173, -884 )
+shape_range = Vector2( 0, 5 )
+trigger = false
+script/script = ExtResource( 3 )
+wallHeight = 25
+wallTextureScale = 50
+topTextureScale = 50
+wallTexture = ExtResource( 4 )
+topTexture = ExtResource( 5 )
+
+[node name="road_" type="StaticBody2D" parent="."]
+
+z/z = -1
+input/pickable = false
+shapes/0/shape = SubResource( 81 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="polygon" type="Polygon2D" parent="road_"]
+
+polygon = Vector2Array( -1000, -2500, -1000, 500, 1000, 500, 1000, -2500 )
+uv = Vector2Array(  )
+color = Color( 1, 1, 1, 1 )
+vertex_colors = ColorArray(  )
+offset = Vector2( 0, 0 )
+texture/texture = ExtResource( 6 )
+texture/offset = Vector2( 0, 0 )
+texture/scale = Vector2( 1, 1 )
+texture/rotation = 0.0
+invert/enable = false
+invert/border = 100.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="road_"]
+
+build_mode = 0
+polygon = Vector2Array( -1000, -2500, -1000, 500, 1000, 500, 1000, -2500 )
+shape_range = Vector2( 0, 0 )
+trigger = false
+
+[node name="Label" type="Label" parent="."]
+
+rect/rotation = 31.2
+rect/scale = Vector2( 2, 2 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = -237.0
+margin/top = -68.0
+margin/right = -115.0
+margin/bottom = -54.0
+text = "left mouse to drive"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label 2" type="Label" parent="."]
+
+rect/rotation = -27.6
+rect/scale = Vector2( 2, 2 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 76.0
+margin/top = -136.0
+margin/right = 210.0
+margin/bottom = -122.0
+text = "right mouse to boost"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label 3" type="Label" parent="."]
+
+rect/rotation = -4.88
+rect/scale = Vector2( 2, 2 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = -182.0
+margin/top = 86.0
+margin/right = 10.0
+margin/bottom = 100.0
+text = "hold shift and drive to reverse"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label 4" type="Label" parent="."]
+
+rect/rotation = 24.1839
+rect/scale = Vector2( 2, 2 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = -125.0
+margin/top = -1487.0
+margin/right = 13.0
+margin/bottom = -1473.0
+text = "getting the hang of it?"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label 5" type="Label" parent="."]
+
+rect/scale = Vector2( 2, 2 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = -208.0
+margin/top = -2801.0
+margin/right = 1.0
+margin/bottom = -2787.0
+text = "yay you completed the tutorial!"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="exit_trigger" type="Area2D" parent="."]
+
+transform/pos = Vector2( 0, -2600 )
+input/pickable = true
+shapes/0/shape = SubResource( 82 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+script/script = ExtResource( 7 )
+triggerName = "car_"
+scenePath = "res://rooms/test_room.tscn"
+delay = 3
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="exit_trigger"]
+
+build_mode = 0
+polygon = Vector2Array( 300, 100, 300, -300, -300, -300, -300, 100 )
+shape_range = Vector2( 0, 0 )
+trigger = false
+
+

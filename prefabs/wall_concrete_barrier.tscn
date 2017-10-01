@@ -9,8 +9,6 @@ points = Vector2Array( 64, -32, 64, 32, -64, 32, -64, -32 )
 
 [node name="wall_concrete_barrier" type="StaticBody2D"]
 
-transform/pos = Vector2( -45, 897 )
-transform/rot = 113.8
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )

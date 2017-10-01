@@ -19,17 +19,17 @@
 [ext_resource path="res://graphics/particles/dust_puff.png" type="Texture" id=17]
 [ext_resource path="res://scripts/tire_mark_renderer.gd" type="Script" id=18]
 
-[sub_resource type="CircleShape2D" id=115]
+[sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
 radius = 32.0
 
-[sub_resource type="CircleShape2D" id=116]
+[sub_resource type="CircleShape2D" id=2]
 
 custom_solver_bias = 0.0
 radius = 12.0
 
-[sub_resource type="SampleLibrary" id=117]
+[sub_resource type="SampleLibrary" id=3]
 
 samples/boost_end = {
 "db": 0.0,
@@ -56,7 +56,7 @@ samples/impact = {
 "sample": ExtResource( 13 )
 }
 
-[sub_resource type="SampleLibrary" id=118]
+[sub_resource type="SampleLibrary" id=4]
 
 samples/boost = {
 "db": 0.0,
@@ -65,7 +65,7 @@ samples/boost = {
 "sample": ExtResource( 14 )
 }
 
-[sub_resource type="SampleLibrary" id=119]
+[sub_resource type="SampleLibrary" id=5]
 
 samples/engine_loop = {
 "db": 0.0,
@@ -74,7 +74,7 @@ samples/engine_loop = {
 "sample": ExtResource( 15 )
 }
 
-[sub_resource type="SampleLibrary" id=120]
+[sub_resource type="SampleLibrary" id=6]
 
 samples/tire_squeal_loop = {
 "db": -20.0,
@@ -83,27 +83,21 @@ samples/tire_squeal_loop = {
 "sample": ExtResource( 16 )
 }
 
-[sub_resource type="CircleShape2D" id=2]
+[sub_resource type="CircleShape2D" id=7]
 
 custom_solver_bias = 0.0
 radius = 5.0
 
 [node name="drunk_ai" type="Node2D"]
 
-z/z = 1
-
-[node name="car" type="Node2D" parent="."]
-
-transform/pos = Vector2( -1230, 350 )
 script/script = ExtResource( 1 )
-facingAngle = 180
+facingAngle = 0
 
-[node name="sprites" type="Node2D" parent="car"]
+[node name="sprites" type="Node2D" parent="."]
 
-editor/display_folded = true
 z/z = 2
 
-[node name="sprite_body_primary" type="Sprite" parent="car/sprites"]
+[node name="sprite_body_primary" type="Sprite" parent="sprites"]
 
 visibility/visible = false
 z/z = 2
@@ -111,41 +105,41 @@ z/relative = false
 texture = ExtResource( 2 )
 modulate = Color( 1, 0, 0, 1 )
 
-[node name="sprite_body_secondary" type="Sprite" parent="car/sprites"]
+[node name="sprite_body_secondary" type="Sprite" parent="sprites"]
 
 visibility/visible = false
 texture = ExtResource( 3 )
 modulate = Color( 0.0078125, 0, 1, 1 )
 
-[node name="sprite_body_wheels" type="Sprite" parent="car/sprites"]
+[node name="sprite_body_wheels" type="Sprite" parent="sprites"]
 
 visibility/visible = false
 texture = ExtResource( 4 )
 hframes = 2
 
-[node name="body" type="Sprite" parent="car/sprites"]
+[node name="body" type="Sprite" parent="sprites"]
 
 texture = ExtResource( 5 )
 modulate = Color( 0.382812, 0, 1, 1 )
 
-[node name="left_front_wheel" type="Sprite" parent="car/sprites"]
+[node name="left_front_wheel" type="Sprite" parent="sprites"]
 
-transform/pos = Vector2( -5, -6 )
+transform/pos = Vector2( -5, -5 )
 texture = ExtResource( 6 )
 hframes = 3
 
-[node name="right_front_wheel" type="Sprite" parent="car/sprites"]
+[node name="right_front_wheel" type="Sprite" parent="sprites"]
 
-transform/pos = Vector2( 5, -6 )
+transform/pos = Vector2( 6, -5 )
 texture = ExtResource( 6 )
 hframes = 3
 
-[node name="frame" type="Sprite" parent="car/sprites"]
+[node name="frame" type="Sprite" parent="sprites"]
 
 texture = ExtResource( 7 )
 hframes = 3
 
-[node name="boost_effect" type="Sprite" parent="car/sprites"]
+[node name="boost_effect" type="Sprite" parent="sprites"]
 
 visibility/visible = false
 transform/pos = Vector2( 0, 32 )
@@ -157,12 +151,12 @@ frameCount = 8
 animSpeed = 20
 loop = false
 
-[node name="wall_collider" type="Area2D" parent="car"]
+[node name="wall_collider" type="Area2D" parent="."]
 
 editor/display_folded = true
 visibility/visible = false
 input/pickable = true
-shapes/0/shape = SubResource( 115 )
+shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 gravity_vec = Vector2( 0, 1 )
@@ -170,18 +164,18 @@ gravity = 98.0
 linear_damp = 0.1
 angular_damp = 1.0
 
-[node name="collider_shape" type="CollisionShape2D" parent="car/wall_collider"]
+[node name="collider_shape" type="CollisionShape2D" parent="wall_collider"]
 
-shape = SubResource( 115 )
+shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
 
-[node name="road_checker" type="Area2D" parent="car"]
+[node name="road_checker" type="Area2D" parent="."]
 
 editor/display_folded = true
 visibility/visible = false
 input/pickable = true
-shapes/0/shape = SubResource( 116 )
+shapes/0/shape = SubResource( 2 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 gravity_vec = Vector2( 0, 1 )
@@ -189,13 +183,13 @@ gravity = 98.0
 linear_damp = 0.1
 angular_damp = 1.0
 
-[node name="collider_shape" type="CollisionShape2D" parent="car/road_checker"]
+[node name="collider_shape" type="CollisionShape2D" parent="road_checker"]
 
-shape = SubResource( 116 )
+shape = SubResource( 2 )
 trigger = false
 _update_shape_index = 0
 
-[node name="sample_player" type="SamplePlayer2D" parent="car"]
+[node name="sample_player" type="SamplePlayer2D" parent="."]
 
 visibility/visible = false
 params/volume_db = 0.0
@@ -204,10 +198,10 @@ params/attenuation/min_distance = 1.0
 params/attenuation/max_distance = 2048.0
 params/attenuation/distance_exp = 1.0
 config/polyphony = 2
-config/samples = SubResource( 117 )
+config/samples = SubResource( 3 )
 config/pitch_random = 0.0
 
-[node name="boost_loop" type="SamplePlayer2D" parent="car"]
+[node name="boost_loop" type="SamplePlayer2D" parent="."]
 
 visibility/visible = false
 params/volume_db = 0.0
@@ -216,10 +210,10 @@ params/attenuation/min_distance = 1.0
 params/attenuation/max_distance = 2048.0
 params/attenuation/distance_exp = 1.0
 config/polyphony = 1
-config/samples = SubResource( 118 )
+config/samples = SubResource( 4 )
 config/pitch_random = 0.0
 
-[node name="engine_loop" type="SamplePlayer2D" parent="car"]
+[node name="engine_loop" type="SamplePlayer2D" parent="."]
 
 visibility/visible = false
 params/volume_db = 0.0
@@ -228,10 +222,10 @@ params/attenuation/min_distance = 1.0
 params/attenuation/max_distance = 2048.0
 params/attenuation/distance_exp = 1.0
 config/polyphony = 1
-config/samples = SubResource( 119 )
+config/samples = SubResource( 5 )
 config/pitch_random = 0.0
 
-[node name="squeal_loop" type="SamplePlayer2D" parent="car"]
+[node name="squeal_loop" type="SamplePlayer2D" parent="."]
 
 visibility/visible = false
 params/volume_db = 0.0
@@ -240,10 +234,10 @@ params/attenuation/min_distance = 1.0
 params/attenuation/max_distance = 2048.0
 params/attenuation/distance_exp = 1.0
 config/polyphony = 1
-config/samples = SubResource( 120 )
+config/samples = SubResource( 6 )
 config/pitch_random = 0.0
 
-[node name="particles" type="Particles2D" parent="car"]
+[node name="particles" type="Particles2D" parent="."]
 
 z/z = 1
 config/amount = 64
@@ -269,24 +263,24 @@ params/hue_variation = 0.0
 params/anim_speed_scale = 1.0
 params/anim_initial_pos = 0.0
 
-[node name="car_collider" type="KinematicBody2D" parent="car"]
+[node name="car_collider" type="KinematicBody2D" parent="."]
 
 visibility/visible = false
 input/pickable = false
-shapes/0/shape = SubResource( 2 )
+shapes/0/shape = SubResource( 7 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
 collision/margin = 0.08
 
-[node name="collider_shape" type="CollisionShape2D" parent="car/car_collider"]
+[node name="collider_shape" type="CollisionShape2D" parent="car_collider"]
 
-shape = SubResource( 2 )
+shape = SubResource( 7 )
 trigger = false
 _update_shape_index = 0
 
-[node name="taunt_label" type="RichTextLabel" parent="car"]
+[node name="taunt_label" type="RichTextLabel" parent="."]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -301,8 +295,22 @@ bbcode/bbcode = ""
 visible_characters = -1
 percent_visible = 1.0
 
+[node name="Panel" type="Panel" parent="taunt_label"]
+
+visibility/opacity = 0.5
+visibility/behind_parent = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 200.0
+margin/bottom = 30.0
+
 [node name="tire_marks" type="Node2D" parent="."]
 
+transform/pos = Vector2( 1230, -350 )
 script/script = ExtResource( 18 )
 lineThickness = 3
 

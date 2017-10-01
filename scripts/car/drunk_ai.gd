@@ -43,12 +43,16 @@ func _ready():
 	pathPoints = pathCurve.get_baked_points()
 	pathPointCount = pathPoints.size()
 	
-	_taunt_random(startingTaunts)
-	
 	set_process(true)
 
 var currentVertex
 func _process(delta):
+	if(rootNode.raceState == rootNode.RACE_STATES.COUNTDOWN):
+		_taunt_random(startingTaunts, 4)
+		
+	if(rootNode.raceState == rootNode.RACE_STATES.WIN):
+		_taunt_random(loseTaunts, 600)
+	
 	if(rootNode.raceState != rootNode.RACE_STATES.IN_PROGRESS):
 		return
 	
@@ -80,6 +84,11 @@ func _process(delta):
 	if(forwardSpeed < currentMaxSpeed):
 		velocity += forwardDirection * currentAccelPower * delta
 	
+	if(lapsCompleted == 1):
+		if(rootNode.raceState == rootNode.RACE_STATES.IN_PROGRESS):
+			rootNode.set_race_state(rootNode.RACE_STATES.LOSE_STILL_FINISHING)
+			_taunt_random(winTaunts, 600)
+	
 	update()
 
 func _handle_car_collision(otherCar):
@@ -87,7 +96,7 @@ func _handle_car_collision(otherCar):
 	var collisionNormal = diff.normalized()
 	var penetrationDepth = colliderRadius - diff.length()
 	if(penetrationDepth > 0):
-		_taunt_random(collisionTaunts)
+		_taunt_random(collisionTaunts, 2)
 
 func _draw():
 	if(debug && currentVertex != null):

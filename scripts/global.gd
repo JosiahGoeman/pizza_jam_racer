@@ -1,10 +1,12 @@
 extends Node2D
 
 enum RACE_STATES{
+	TUTORIAL,
 	STARTING,
 	COUNTDOWN,
 	IN_PROGRESS,
 	WIN,
+	LOSE_STILL_FINISHING,
 	LOSE
 }
 
@@ -13,9 +15,10 @@ const countdownPeriod = 3
 
 var timer = 0
 var countDownCounter = 4
-var raceState = RACE_STATES.STARTING
+export var raceState = RACE_STATES.STARTING
 
 onready var chimePlayer = get_node("starting_chime")
+onready var music = get_node("music")
 
 func _ready():
 	set_process(true)
@@ -40,3 +43,8 @@ func _process(delta):
 				raceState = RACE_STATES.IN_PROGRESS
 			else:
 				chimePlayer.play("3-2-1")
+
+func set_race_state(newState):
+	raceState = newState
+	if(newState == RACE_STATES.LOSE_STILL_FINISHING):
+		music.play("lose_music")
