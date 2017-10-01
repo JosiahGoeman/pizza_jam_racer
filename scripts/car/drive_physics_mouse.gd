@@ -12,6 +12,7 @@ onready var camera = get_node("camera")
 onready var boostMeter = get_node("hud_overlay").get_node("boost_meter")
 onready var winScreen = get_node("hud_overlay").get_node("win_screen")
 onready var loseScreen = get_node("hud_overlay").get_node("lose_screen")
+onready var lapCounter = get_node("hud_overlay").get_node("lap_counter")
 
 func _ready():
 	engineLoop.play("engine_loop")
@@ -39,11 +40,6 @@ func _set_boosting(val):
 var boostKeyPrev = false
 var leftMousePrev = false
 func _process(delta):
-	#print(get_parent())
-	#print(get_parent().get_node("hud_overlay"))
-	#for i in get_parent().get_node("hud_overlay").get_children():
-		#print(i.get_name())
-	#print(get_parent().get_node("hud_overlay").get_node("win_screen"))
 	if(rootNode.raceState == rootNode.RACE_STATES.STARTING ||
 	rootNode.raceState == rootNode.RACE_STATES.COUNTDOWN):
 		return
@@ -115,11 +111,21 @@ func _process(delta):
 	boostKeyPrev = boostKey
 	leftMousePrev = leftMouse
 	
+	lapCounter.set_bbcode("Lap: "+str(lapsCompleted)+" / 3")
 	if(lapsCompleted == 1):
 		if(rootNode.raceState == rootNode.RACE_STATES.IN_PROGRESS):
 			rootNode.set_race_state(rootNode.RACE_STATES.WIN)
 			winScreen.show()
+	
+	if(rootNode.raceState == rootNode.RACE_STATES.WIN):
+		if(Input.is_key_pressed(KEY_SPACE)):
+			if(get_tree().get_current_scene().get_name() == "race_1"):
+				get_tree().change_scene("res://rooms/race_2.tscn")
+			if(get_tree().get_current_scene().get_name() == "race_1"):
+				#get_tree().change_scene("res://rooms/race_2.tscn")
+				print("todo: make next race")
 			
-	if(rootNode.raceState == rootNode.RACE_STATES.LOSE_STILL_FINISHING):
-		rootNode.set_race_state(rootNode.RACE_STATES.LOSE)
+	if(rootNode.raceState == rootNode.RACE_STATES.LOSE):
 		loseScreen.show()
+		if(Input.is_key_pressed(KEY_SPACE)):
+			get_tree().reload_current_scene()

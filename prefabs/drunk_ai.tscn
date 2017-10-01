@@ -91,6 +91,23 @@ radius = 5.0
 [node name="drunk_ai" type="Node2D"]
 
 script/script = ExtResource( 1 )
+maxForwardSpeed = 500
+maxReverseSpeed = 100
+accelPower = 500
+offRoadDrag = 2
+reversePower = 500
+brakePower = 500
+steerSpeed = 5
+maxSteerAngle = 2.5
+skidBeginForce = 1200
+skidGrip = 3
+rollingFriction = 100
+minSkidmarkSpeed = 1200
+colliderRadius = 25
+minLoopPitch = 0.5
+maxLoopPitch = 3
+speedForImpactSount = 50
+minImpactSoundTime = 0.25
 facingAngle = 0
 
 [node name="sprites" type="Node2D" parent="."]

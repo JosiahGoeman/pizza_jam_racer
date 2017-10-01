@@ -46,5 +46,5 @@ func _process(delta):
 
 func set_race_state(newState):
 	raceState = newState
-	if(newState == RACE_STATES.LOSE_STILL_FINISHING):
+	if(newState == RACE_STATES.LOSE):
 		music.play("lose_music")

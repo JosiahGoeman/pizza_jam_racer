@@ -1,7 +1,8 @@
 tool
 extends CollisionPolygon2D
 
-export var wallHeight = 100
+export var wallHeight = 25
+export var topHeight = 25
 export var wallTextureScale = 50
 export var topTextureScale = 50
 export(Texture) var wallTexture
@@ -34,7 +35,7 @@ func _draw():
 	var topColors = []
 	var topUVs = []
 	for i in range(0, topPolygon.size()):
-		topPolygon[i] += Vector2(0, -wallHeight)
+		topPolygon[i] += Vector2(0, -topHeight)
 		topColors.append(Color(1, 1, 1, 1))
 		topUVs.append(topPolygon[i] / topTextureScale)
 		#draw_circle(polygon[i], 10, Color(1, 1, 1, 1))

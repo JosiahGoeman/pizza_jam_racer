@@ -12,7 +12,7 @@ func _ready():
 	pass
 
 func _change_texture(texture):
-	#get_curve().set_bake_interval(texture.get_height())
+	roadTexture = texture
 	update()
 
 func _update_road_width(val):

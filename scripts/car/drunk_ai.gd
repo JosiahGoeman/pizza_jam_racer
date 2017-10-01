@@ -6,7 +6,7 @@ const indexIncDistSq = 100 * 100
 const pathVertInterval = 10
 
 const startingTaunts = [
-	"Wooh, ah yeeaaah...\nracetime...",
+	"Ah yeeaaah...\nracetime...fun.",
 	"Woo im drunk :D",
 	"*hic*",
 	"zzzz.. oh uh, wha?",
@@ -21,9 +21,9 @@ const collisionTaunts = [
 
 const winTaunts = [
 	"I'm drunk, you\ndon't have an excuse.",
-	"ez pz",
+	"Could do this in my... zzzz",
 	"This calls for a drink!",
-	"Whoo, ah... yeah... zzzz"
+	"Whoo, ah... yeah... *hic*"
 ]
 
 const loseTaunts = [
@@ -79,14 +79,14 @@ func _process(delta):
 	#particles.set_pos(forwardDirection * -15)
 
 	#accel/reverse/brake
-	var currentMaxSpeed = maxForwardSpeed * 1.5
+	var currentMaxSpeed = maxForwardSpeed * 1.75
 	var currentAccelPower = accelPower * 2
 	if(forwardSpeed < currentMaxSpeed):
 		velocity += forwardDirection * currentAccelPower * delta
 	
 	if(lapsCompleted == 1):
 		if(rootNode.raceState == rootNode.RACE_STATES.IN_PROGRESS):
-			rootNode.set_race_state(rootNode.RACE_STATES.LOSE_STILL_FINISHING)
+			rootNode.set_race_state(rootNode.RACE_STATES.LOSE)
 			_taunt_random(winTaunts, 600)
 	
 	update()

@@ -1,23 +1,23 @@
 extends Node2D
 
 #constants
-const maxForwardSpeed = 500
-const maxReverseSpeed = 100
-const accelPower = 500
-const offRoadDrag = 2
-const reversePower = 500
-const brakePower = 500
-const steerSpeed = 5			#how fast car's steering turns to face nub
-const maxSteerAngle = 2.5		#how far the car can steer
-const skidBeginForce = 1200		#how much lateral force the car withstands before sliding
-const skidGrip = 3				#how much the car resists lateral movement while sliding
-const rollingFriction = 100		#how quickly the car slows down when not accelerating
-const minSkidmarkSpeed = skidBeginForce	#how fast the car needs to be sliding to leave skidmarks
-const colliderRadius = 20
-const minLoopPitch = 0.5
-const maxLoopPitch = 3
-const speedForImpactSount = 50
-const minImpactSoundTime = 0.25
+export var maxForwardSpeed = 500
+export var maxReverseSpeed = 100
+export var accelPower = 500
+export var offRoadDrag = 2
+export var reversePower = 500
+export var brakePower = 500
+export var steerSpeed = 5			#how fast car's steering turns to face nub
+export var maxSteerAngle = 2.5		#how far the car can steer
+export var skidBeginForce = 1200		#how much lateral force the car withstands before sliding
+export var skidGrip = 3				#how much the car resists lateral movement while sliding
+export var rollingFriction = 100		#how quickly the car slows down when not accelerating
+export var minSkidmarkSpeed = 1200	#how fast the car needs to be sliding to leave skidmarks
+export var colliderRadius = 20
+export var minLoopPitch = 0.5
+export var maxLoopPitch = 3
+export var speedForImpactSount = 50
+export var minImpactSoundTime = 0.25
 const maxFloat = 3.402823e+38
 
 var velocity = Vector2()
@@ -36,7 +36,7 @@ var touchedCheckpoint = false
 var lapsCompleted = 0
 
 #node references
-onready var rootNode = get_tree().get_root().get_node("root")
+onready var rootNode = get_tree().get_current_scene()
 onready var spriteNode = get_node("sprites")				#reference to the sprite so we don't have to look it up every time
 onready var leftFrontWheel = spriteNode.get_node("left_front_wheel")
 onready var rightFrontWheel = spriteNode.get_node("right_front_wheel")

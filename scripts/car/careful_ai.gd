@@ -23,14 +23,14 @@ const winTaunts = [
 	"Did I do it?  I think I did it!",
 	"Wow, what a rush!",
 	"Yay!  Never doing that again!",
-	""
+	"Maybe someone will\nsponsor me now!"
 ]
 
 const loseTaunts = [
-	"It's not about winning, it's about being scared.",
-	"Maybe next time.",
-	"Practice makes perfect.",
-	"I'll get you next time, if that's alright."
+	"It's not about winning,\nit's about being scared.",
+	"It's okay, at least\nwe're still alive.",
+	"Oh well, practice\nmakes perfect.",
+	"I'll get you next time,\nif that's alright."
 ]
 
 var currentVertIndex = 0.0
@@ -38,7 +38,7 @@ var pathPoints
 var pathPointCount
 
 func _ready():
-	var pathCurve = get_tree().get_root().get_node("root").get_node("track_loop").get_curve()
+	var pathCurve = rootNode.get_node("track_loop").get_curve()
 	pathCurve.set_bake_interval(pathVertInterval)
 	pathPoints = pathCurve.get_baked_points()
 	pathPointCount = pathPoints.size()
@@ -47,8 +47,8 @@ func _ready():
 
 var currentVertex
 func _process(delta):
-	if(rootNode.raceState != rootNode.RACE_STATES.COUNTDOWN):
-		_taunt_random(startingTaunts, 3)
+	if(rootNode.raceState == rootNode.RACE_STATES.COUNTDOWN):
+		_taunt_random(startingTaunts, 4)
 	
 	if(rootNode.raceState == rootNode.RACE_STATES.WIN):
 		_taunt_random(loseTaunts, 600)
@@ -64,7 +64,7 @@ func _process(delta):
 	
 	#steering
 	currentVertex = pathPoints[int(currentVertIndex)%pathPointCount]
-	currentVertex += get_tree().get_root().get_node("root").get_node("track_loop").get_pos()
+	currentVertex += rootNode.get_node("track_loop").get_pos()
 	
 	if(get_pos().distance_squared_to(currentVertex) < indexIncDistSq):
 		currentVertIndex += 1
@@ -88,7 +88,7 @@ func _process(delta):
 	
 	if(lapsCompleted == 1):
 		if(rootNode.raceState == rootNode.RACE_STATES.IN_PROGRESS):
-			rootNode.set_race_state(rootNode.RACE_STATES.LOSE_STILL_FINISHING)
+			rootNode.set_race_state(rootNode.RACE_STATES.LOSE)
 			_taunt_random(winTaunts, 600)
 
 func _handle_car_collision(otherCar):

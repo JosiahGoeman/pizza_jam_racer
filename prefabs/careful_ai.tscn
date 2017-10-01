@@ -1,6 +1,6 @@
-[gd_scene load_steps=32 format=1]
+[gd_scene load_steps=26 format=1]
 
-[ext_resource path="res://scripts/car/drive_physics_mouse.gd" type="Script" id=1]
+[ext_resource path="res://scripts/car/careful_ai.gd" type="Script" id=1]
 [ext_resource path="res://graphics/car body/car_body_basic_primary.png" type="Texture" id=2]
 [ext_resource path="res://graphics/car body/car_body_basic_secondary.png" type="Texture" id=3]
 [ext_resource path="res://graphics/wheels/wheels_basic.png" type="Texture" id=4]
@@ -9,22 +9,15 @@
 [ext_resource path="res://graphics/frame.png" type="Texture" id=7]
 [ext_resource path="res://graphics/explosions/explosion_2.png" type="Texture" id=8]
 [ext_resource path="res://scripts/animated_sprite_controller.gd" type="Script" id=9]
-[ext_resource path="res://scripts/follow_camera.gd" type="Script" id=10]
-[ext_resource path="res://scripts/control_circle.gd" type="Script" id=11]
-[ext_resource path="res://sounds/boost_end.wav" type="Sample" id=12]
-[ext_resource path="res://sounds/boost_fail.wav" type="Sample" id=13]
-[ext_resource path="res://sounds/boost_start.wav" type="Sample" id=14]
-[ext_resource path="res://sounds/impact.wav" type="Sample" id=15]
-[ext_resource path="res://sounds/pickup.wav" type="Sample" id=16]
-[ext_resource path="res://sounds/boost.wav" type="Sample" id=17]
-[ext_resource path="res://sounds/engine_loop.wav" type="Sample" id=18]
-[ext_resource path="res://sounds/imported/tire_squeal_loop.smp" type="Sample" id=19]
-[ext_resource path="res://graphics/particles/dust_puff.png" type="Texture" id=20]
-[ext_resource path="res://scripts/fps_counter.gd" type="Script" id=21]
-[ext_resource path="res://graphics/gui/gui_boost.png" type="Texture" id=22]
-[ext_resource path="res://scripts/boost_meter.gd" type="Script" id=23]
-[ext_resource path="res://scripts/blink.gd" type="Script" id=24]
-[ext_resource path="res://scripts/tire_mark_renderer.gd" type="Script" id=25]
+[ext_resource path="res://sounds/boost_end.wav" type="Sample" id=10]
+[ext_resource path="res://sounds/boost_fail.wav" type="Sample" id=11]
+[ext_resource path="res://sounds/boost_start.wav" type="Sample" id=12]
+[ext_resource path="res://sounds/impact.wav" type="Sample" id=13]
+[ext_resource path="res://sounds/boost.wav" type="Sample" id=14]
+[ext_resource path="res://sounds/engine_loop.wav" type="Sample" id=15]
+[ext_resource path="res://sounds/imported/tire_squeal_loop.smp" type="Sample" id=16]
+[ext_resource path="res://graphics/particles/dust_puff.png" type="Texture" id=17]
+[ext_resource path="res://scripts/tire_mark_renderer.gd" type="Script" id=18]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -34,7 +27,7 @@ radius = 32.0
 [sub_resource type="CircleShape2D" id=2]
 
 custom_solver_bias = 0.0
-radius = 5.0
+radius = 12.0
 
 [sub_resource type="SampleLibrary" id=3]
 
@@ -42,31 +35,25 @@ samples/boost_end = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 12 )
+"sample": ExtResource( 10 )
 }
 samples/boost_fail = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 13 )
+"sample": ExtResource( 11 )
 }
 samples/boost_start = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 14 )
+"sample": ExtResource( 12 )
 }
 samples/impact = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 15 )
-}
-samples/pickup = {
-"db": 0.0,
-"pitch": 1.0,
-"priority": 0,
-"sample": ExtResource( 16 )
+"sample": ExtResource( 13 )
 }
 
 [sub_resource type="SampleLibrary" id=4]
@@ -75,7 +62,7 @@ samples/boost = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 17 )
+"sample": ExtResource( 14 )
 }
 
 [sub_resource type="SampleLibrary" id=5]
@@ -84,7 +71,7 @@ samples/engine_loop = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 18 )
+"sample": ExtResource( 15 )
 }
 
 [sub_resource type="SampleLibrary" id=6]
@@ -93,30 +80,20 @@ samples/tire_squeal_loop = {
 "db": -20.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 19 )
+"sample": ExtResource( 16 )
 }
 
-[node name="player_car" type="Node2D"]
+[sub_resource type="CircleShape2D" id=7]
 
+custom_solver_bias = 0.0
+radius = 5.0
+
+[node name="careful_ai" type="Node2D"]
+
+editor/display_folded = true
+transform/pos = Vector2( -1235, 350 )
 script/script = ExtResource( 1 )
-maxForwardSpeed = 500
-maxReverseSpeed = 100
-accelPower = 500
-offRoadDrag = 2
-reversePower = 500
-brakePower = 500
-steerSpeed = 5
-maxSteerAngle = 2.5
-skidBeginForce = 1200
-skidGrip = 3
-rollingFriction = 100
-minSkidmarkSpeed = 1200
-colliderRadius = 20
-minLoopPitch = 0.5
-maxLoopPitch = 3
-speedForImpactSount = 50
-minImpactSoundTime = 0.25
-facingAngle = 0
+facingAngle = -90
 
 [node name="sprites" type="Node2D" parent="."]
 
@@ -145,7 +122,7 @@ hframes = 2
 [node name="body" type="Sprite" parent="sprites"]
 
 texture = ExtResource( 5 )
-modulate = Color( 1, 0, 0, 1 )
+modulate = Color( 1, 0.9375, 0, 1 )
 
 [node name="left_front_wheel" type="Sprite" parent="sprites"]
 
@@ -175,22 +152,6 @@ script/script = ExtResource( 9 )
 frameCount = 8
 animSpeed = 20
 loop = false
-
-[node name="camera" type="Node2D" parent="."]
-
-visibility/visible = false
-script/script = ExtResource( 10 )
-zoom = 1.0
-
-[node name="control_circle" type="Node2D" parent="."]
-
-z/z = 1
-script/script = ExtResource( 11 )
-circleRadius = 50
-circleColor = Color( 100, 100, 100, 0.05 )
-circleThinkness = 2
-nubSize = 10
-nubColor = Color( 0, 0, 0, 0.2 )
 
 [node name="wall_collider" type="Area2D" parent="."]
 
@@ -286,7 +247,7 @@ config/lifetime = 2.0
 config/emitting = false
 config/process_mode = 1
 config/local_space = false
-config/texture = ExtResource( 20 )
+config/texture = ExtResource( 17 )
 params/direction = 0.0
 params/spread = 20.0
 params/linear_velocity = 10.0
@@ -306,10 +267,9 @@ params/anim_initial_pos = 0.0
 
 [node name="car_collider" type="KinematicBody2D" parent="."]
 
-editor/display_folded = true
 visibility/visible = false
 input/pickable = false
-shapes/0/shape = SubResource( 2 )
+shapes/0/shape = SubResource( 7 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 collision/layers = 1
@@ -318,13 +278,12 @@ collision/margin = 0.08
 
 [node name="collider_shape" type="CollisionShape2D" parent="car_collider"]
 
-shape = SubResource( 2 )
+shape = SubResource( 7 )
 trigger = false
 _update_shape_index = 0
 
 [node name="taunt_label" type="RichTextLabel" parent="."]
 
-visibility/visible = false
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -338,180 +297,23 @@ bbcode/bbcode = ""
 visible_characters = -1
 percent_visible = 1.0
 
-[node name="hud_overlay" type="CanvasLayer" parent="."]
-
-layer = 1
-offset = Vector2( 0, 0 )
-rotation = 0.0
-scale = Vector2( 1, 1 )
-
-[node name="fps_counter" type="Label" parent="hud_overlay"]
-
-rect/rotation = 41.68
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 9.0
-margin/top = 30.0
-margin/right = 70.0
-margin/bottom = 44.0
-text = "hey there"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-script/script = ExtResource( 21 )
-
-[node name="boost_meter" type="TextureFrame" parent="hud_overlay"]
-
-rect/scale = Vector2( 3, 3 )
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 12.0
-margin/top = 47.0
-margin/right = 28.0
-margin/bottom = 111.0
-texture = ExtResource( 22 )
-stretch_mode = 0
-script/script = ExtResource( 23 )
-
-[node name="win_screen" type="Control" parent="hud_overlay"]
-
-editor/display_folded = true
-visibility/visible = false
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 40.0
-margin/bottom = 40.0
-
-[node name="overlay" type="Panel" parent="hud_overlay/win_screen"]
+[node name="Panel" type="Panel" parent="taunt_label"]
 
 visibility/opacity = 0.5
+visibility/behind_parent = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 960.0
-margin/bottom = 540.0
-
-[node name="race_failed" type="RichTextLabel" parent="hud_overlay/win_screen"]
-
-rect/scale = Vector2( 5, 5 )
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 92.0
-margin/right = 192.0
-margin/bottom = 182.0
-bbcode/enabled = true
-bbcode/bbcode = "[center]Race Won![/center]"
-visible_characters = -1
-percent_visible = 1.0
-
-[node name="press_space" type="RichTextLabel" parent="hud_overlay/win_screen/race_failed"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 47.0
-margin/right = 192.0
-margin/bottom = 108.0
-bbcode/enabled = true
-bbcode/bbcode = "[center]Press [b]SPACE[/b] to continue[/center]"
-visible_characters = -1
-percent_visible = 1.0
-script/script = ExtResource( 24 )
-blinkSpeed = 1
-
-[node name="lose_screen" type="Control" parent="hud_overlay"]
-
-editor/display_folded = true
-visibility/visible = false
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 40.0
-margin/bottom = 40.0
-
-[node name="overlay" type="Panel" parent="hud_overlay/lose_screen"]
-
-visibility/opacity = 0.5
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 960.0
-margin/bottom = 540.0
-
-[node name="race_failed" type="RichTextLabel" parent="hud_overlay/lose_screen"]
-
-rect/scale = Vector2( 5, 5 )
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 92.0
-margin/right = 192.0
-margin/bottom = 182.0
-bbcode/enabled = true
-bbcode/bbcode = "[center]Race Failed[/center]"
-visible_characters = -1
-percent_visible = 1.0
-
-[node name="press_space" type="RichTextLabel" parent="hud_overlay/lose_screen/race_failed"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 47.0
-margin/right = 192.0
-margin/bottom = 108.0
-bbcode/enabled = true
-bbcode/bbcode = "[center]Press [b]SPACE[/b] to try again[/center]"
-visible_characters = -1
-percent_visible = 1.0
-script/script = ExtResource( 24 )
-blinkSpeed = 1
-
-[node name="lap_counter" type="RichTextLabel" parent="hud_overlay"]
-
-rect/scale = Vector2( 2, 2 )
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 77.0
-margin/top = 47.0
-margin/right = 164.0
-margin/bottom = 67.0
-bbcode/enabled = true
-bbcode/bbcode = "sample text"
-visible_characters = -1
-percent_visible = 1.0
+margin/right = 200.0
+margin/bottom = 30.0
 
 [node name="tire_marks" type="Node2D" parent="."]
 
-script/script = ExtResource( 25 )
+transform/pos = Vector2( 1230, -350 )
+script/script = ExtResource( 18 )
 lineThickness = 3
 
 
