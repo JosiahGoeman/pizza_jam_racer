@@ -86,7 +86,7 @@ func _process(delta):
 	
 	update()
 	
-	if(lapsCompleted == 1):
+	if(lapsCompleted == 3):
 		if(rootNode.raceState == rootNode.RACE_STATES.IN_PROGRESS):
 			rootNode.set_race_state(rootNode.RACE_STATES.LOSE)
 			_taunt_random(winTaunts, 600)

@@ -1,21 +1,24 @@
-[gd_scene load_steps=171 format=1]
+[gd_scene load_steps=174 format=1]
 
 [ext_resource path="res://scripts/global.gd" type="Script" id=1]
-[ext_resource path="res://textures/SandAndStones.png" type="Texture" id=2]
+[ext_resource path="res://textures/Grass2_Sparse.png" type="Texture" id=2]
 [ext_resource path="res://scripts/wall_maker.gd" type="Script" id=3]
 [ext_resource path="res://textures/texture_wall_pillars_trees.png" type="Texture" id=4]
 [ext_resource path="res://textures/texture_leaves.png" type="Texture" id=5]
 [ext_resource path="res://prefabs/wall_concrete_barrier.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scripts/path_to_road.gd" type="Script" id=7]
-[ext_resource path="res://textures/road.png" type="Texture" id=8]
+[ext_resource path="res://textures/texture_dirt.png" type="Texture" id=8]
 [ext_resource path="res://graphics/finishline.png" type="Texture" id=9]
 [ext_resource path="res://sounds/3-2-1.wav" type="Sample" id=10]
 [ext_resource path="res://sounds/go.wav" type="Sample" id=11]
 [ext_resource path="res://prefabs/boost_refill.tscn" type="PackedScene" id=12]
-[ext_resource path="res://music/imported/lose_music.smp" type="Sample" id=13]
-[ext_resource path="res://prefabs/player_car.tscn" type="PackedScene" id=14]
-[ext_resource path="res://prefabs/drunk_ai.tscn" type="PackedScene" id=15]
-[ext_resource path="res://scripts/intro_screen.gd" type="Script" id=16]
+[ext_resource path="res://music/imported/lose.smp" type="Sample" id=13]
+[ext_resource path="res://music/imported/music_2.smp" type="Sample" id=14]
+[ext_resource path="res://music/imported/win.smp" type="Sample" id=15]
+[ext_resource path="res://prefabs/player_car.tscn" type="PackedScene" id=16]
+[ext_resource path="res://prefabs/drunk_ai.tscn" type="PackedScene" id=17]
+[ext_resource path="res://scripts/intro_screen.gd" type="Script" id=18]
+[ext_resource path="res://graphics/imported/comic_zine_ot.fnt" type="BitmapFont" id=19]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 
@@ -769,7 +772,7 @@ points = Vector2Array( -1194.22, 451.409, -1192.19, 574.286, -1394.2, 454.555, -
 custom_solver_bias = 0.0
 points = Vector2Array( -1395.99, 326.399, -1196.01, 323.601, -1194.22, 451.409 )
 
-[sub_resource type="ConvexPolygonShape2D" id=155]
+[sub_resource type="ConvexPolygonShape2D" id=151]
 
 custom_solver_bias = 0.0
 points = Vector2Array( 57.1711, 10, -60.2187, 10, -60.2187, -30, 57.1711, -30 )
@@ -796,14 +799,26 @@ samples/go = {
 
 [sub_resource type="SampleLibrary" id=154]
 
-samples/lose_music = {
+samples/lose = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 13 )
 }
+samples/music_2 = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 14 )
+}
+samples/win = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 15 )
+}
 
-[node name="root" type="Node2D"]
+[node name="race_2" type="Node2D"]
 
 script/script = ExtResource( 1 )
 raceState = 1
@@ -819,7 +834,7 @@ vertex_colors = ColorArray(  )
 offset = Vector2( 0, 0 )
 texture/texture = ExtResource( 2 )
 texture/offset = Vector2( 0, 0 )
-texture/scale = Vector2( 20, 20 )
+texture/scale = Vector2( 1, 1 )
 texture/rotation = 0.0
 invert/enable = false
 invert/border = 100.0
@@ -914,6 +929,7 @@ wallTextureScale = 50
 topTextureScale = 100
 wallTexture = ExtResource( 4 )
 topTexture = ExtResource( 5 )
+drawWallsFirst = true
 
 [node name="wall_outside" type="StaticBody2D" parent="obstacles"]
 
@@ -1031,6 +1047,7 @@ wallTextureScale = 50
 topTextureScale = 100
 wallTexture = ExtResource( 4 )
 topTexture = ExtResource( 5 )
+drawWallsFirst = true
 
 [node name="wall_concrete_barrier" parent="obstacles" instance=ExtResource( 6 )]
 
@@ -1039,7 +1056,8 @@ transform/rot = -65.5
 
 [node name="wall_concrete_barrier1" parent="obstacles" instance=ExtResource( 6 )]
 
-transform/pos = Vector2( -84, 765 )
+transform/pos = Vector2( -100, 760 )
+transform/rot = -19.6279
 
 [node name="wall_concrete_barrier2" parent="obstacles" instance=ExtResource( 6 )]
 
@@ -1058,7 +1076,6 @@ transform/rot = 185.1
 
 [node name="track_loop" type="Path2D" parent="."]
 
-editor/display_folded = true
 transform/pos = Vector2( 107, 125 )
 curve = SubResource( 52 )
 script/script = ExtResource( 7 )
@@ -1432,7 +1449,7 @@ invert/border = 100.0
 transform/pos = Vector2( -1263.25, 450 )
 transform/scale = Vector2( 4.42969, 1 )
 input/pickable = false
-shapes/0/shape = SubResource( 155 )
+shapes/0/shape = SubResource( 151 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 collision/layers = 1
@@ -1529,12 +1546,12 @@ default/reverb_room = 2
 default/reverb_send = 0.0
 default/chorus_send = 0.0
 
-[node name="player_car" parent="." instance=ExtResource( 14 )]
+[node name="player_car" parent="." instance=ExtResource( 16 )]
 
 transform/pos = Vector2( -1140, 350 )
 facingAngle = 180
 
-[node name="drunk_ai" parent="." instance=ExtResource( 15 )]
+[node name="drunk_ai" parent="." instance=ExtResource( 17 )]
 
 transform/pos = Vector2( -1240, 350 )
 facingAngle = 180
@@ -1545,7 +1562,7 @@ layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
-script/script = ExtResource( 16 )
+script/script = ExtResource( 18 )
 
 [node name="Panel" type="Panel" parent="intro_screen"]
 
@@ -1561,17 +1578,18 @@ margin/bottom = 540.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="intro_screen"]
 
-rect/scale = Vector2( 2, 2 )
+rect/scale = Vector2( 0.5, 0.5 )
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 254.0
-margin/right = 480.0
-margin/bottom = 398.0
+margin/top = 220.0
+margin/right = 1920.0
+margin/bottom = 540.0
+custom_fonts/normal_font = ExtResource( 19 )
 bbcode/enabled = true
-bbcode/bbcode = "[center]Race 2 - Opponent: Scrumpy Dave \"The Pinball\"[/center]"
+bbcode/bbcode = "[center]Race 2[/center][center]Opponent: Scrumpy Dave \"The Pinball\"[/center]"
 visible_characters = -1
 percent_visible = 1.0
 

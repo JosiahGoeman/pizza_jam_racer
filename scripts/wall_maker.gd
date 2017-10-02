@@ -7,6 +7,7 @@ export var wallTextureScale = 50
 export var topTextureScale = 50
 export(Texture) var wallTexture
 export(Texture) var topTexture
+export var drawWallsFirst = true
 
 func _ready():
 	# Called every time the node is added to the scene.
@@ -14,7 +15,14 @@ func _ready():
 	pass
 
 func _draw():
-	#draw walls
+	if(drawWallsFirst):
+		_draw_walls()
+		_draw_top()
+	else:
+		_draw_top()
+		_draw_walls()
+
+func _draw_walls():
 	var polygon = get_polygon()
 	for i in range(0, polygon.size()):
 		var thisVert = polygon[i]
@@ -29,8 +37,8 @@ func _draw():
 		aboveNext/wallTextureScale,
 		nextVert/wallTextureScale]
 		draw_polygon(segmentPolygon, segmentColors, segmentUVs, wallTexture)
-	
-	#draw top polygon
+
+func _draw_top():
 	var topPolygon = get_polygon()
 	var topColors = []
 	var topUVs = []

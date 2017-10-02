@@ -112,7 +112,7 @@ func _process(delta):
 	leftMousePrev = leftMouse
 	
 	lapCounter.set_bbcode("Lap: "+str(lapsCompleted)+" / 3")
-	if(lapsCompleted == 1):
+	if(lapsCompleted == 3):
 		if(rootNode.raceState == rootNode.RACE_STATES.IN_PROGRESS):
 			rootNode.set_race_state(rootNode.RACE_STATES.WIN)
 			winScreen.show()
@@ -121,8 +121,8 @@ func _process(delta):
 		if(Input.is_key_pressed(KEY_SPACE)):
 			if(get_tree().get_current_scene().get_name() == "race_1"):
 				get_tree().change_scene("res://rooms/race_2.tscn")
-			if(get_tree().get_current_scene().get_name() == "race_1"):
-				#get_tree().change_scene("res://rooms/race_2.tscn")
+			if(get_tree().get_current_scene().get_name() == "race_2"):
+				get_tree().change_scene("res://rooms/a_challenger_appears.tscn")
 				print("todo: make next race")
 			
 	if(rootNode.raceState == rootNode.RACE_STATES.LOSE):

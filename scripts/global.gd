@@ -41,10 +41,16 @@ func _process(delta):
 				timer = 0
 				chimePlayer.play("go")
 				raceState = RACE_STATES.IN_PROGRESS
+				if(get_name() == "race_1"):
+					music.play("music_1")
+				elif(get_name() == "race_2"):
+					music.play("music_2")
 			else:
 				chimePlayer.play("3-2-1")
 
 func set_race_state(newState):
 	raceState = newState
 	if(newState == RACE_STATES.LOSE):
-		music.play("lose_music")
+		music.play("lose")
+	if(newState == RACE_STATES.WIN):
+		music.play("win")

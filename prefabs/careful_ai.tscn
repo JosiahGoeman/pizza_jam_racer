@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=1]
+[gd_scene load_steps=27 format=1]
 
 [ext_resource path="res://scripts/car/careful_ai.gd" type="Script" id=1]
 [ext_resource path="res://graphics/car body/car_body_basic_primary.png" type="Texture" id=2]
@@ -17,7 +17,8 @@
 [ext_resource path="res://sounds/engine_loop.wav" type="Sample" id=15]
 [ext_resource path="res://sounds/imported/tire_squeal_loop.smp" type="Sample" id=16]
 [ext_resource path="res://graphics/particles/dust_puff.png" type="Texture" id=17]
-[ext_resource path="res://scripts/tire_mark_renderer.gd" type="Script" id=18]
+[ext_resource path="res://graphics/imported/comic_zine_ot.fnt" type="BitmapFont" id=18]
+[ext_resource path="res://scripts/tire_mark_renderer.gd" type="Script" id=19]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -90,9 +91,24 @@ radius = 5.0
 
 [node name="careful_ai" type="Node2D"]
 
-editor/display_folded = true
-transform/pos = Vector2( -1235, 350 )
 script/script = ExtResource( 1 )
+maxForwardSpeed = 500
+maxReverseSpeed = 100
+accelPower = 500
+offRoadDrag = 2
+reversePower = 500
+brakePower = 500
+steerSpeed = 5
+maxSteerAngle = 2.5
+skidBeginForce = 1200
+skidGrip = 3
+rollingFriction = 100
+minSkidmarkSpeed = 1200
+colliderRadius = 20
+minLoopPitch = 0.5
+maxLoopPitch = 3
+speedForImpactSount = 50
+minImpactSoundTime = 0.25
 facingAngle = -90
 
 [node name="sprites" type="Node2D" parent="."]
@@ -284,16 +300,18 @@ _update_shape_index = 0
 
 [node name="taunt_label" type="RichTextLabel" parent="."]
 
+rect/scale = Vector2( 0.25, 0.25 )
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = -100.0
 margin/top = -60.0
-margin/right = 100.0
-margin/bottom = -20.0
+margin/right = 700.0
+margin/bottom = 140.0
+custom_fonts/normal_font = ExtResource( 18 )
 bbcode/enabled = true
-bbcode/bbcode = ""
+bbcode/bbcode = "[center]sample text[/center]"
 visible_characters = -1
 percent_visible = 1.0
 
@@ -301,6 +319,7 @@ percent_visible = 1.0
 
 visibility/opacity = 0.5
 visibility/behind_parent = true
+rect/scale = Vector2( 4, 4 )
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -308,12 +327,12 @@ size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
 margin/right = 200.0
-margin/bottom = 30.0
+margin/bottom = 50.0
 
 [node name="tire_marks" type="Node2D" parent="."]
 
 transform/pos = Vector2( 1230, -350 )
-script/script = ExtResource( 18 )
+script/script = ExtResource( 19 )
 lineThickness = 3
 
 

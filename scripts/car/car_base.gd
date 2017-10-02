@@ -106,12 +106,12 @@ func _process(delta):
 	#lateral friction (traction)
 	var right = get_right_direction()
 	var lateralForce = velocity.dot(right)
-	var currentTireGrip = skidBeginForce
-	var lateralCounterForce = -lateralForce#clamp(-lateralForce, -currentTireGrip, currentTireGrip)
+	#var currentTireGrip = skidBeginForce
+	#var lateralCounterForce = clamp(-lateralForce, -currentTireGrip, currentTireGrip)
 	if(abs(lateralForce) < skidBeginForce * delta):
-		velocity += right * lateralCounterForce
+		velocity += right * -lateralForce
 	else:
-		velocity += right * lateralCounterForce * skidGrip * delta
+		velocity += right * -lateralForce * skidGrip * delta
 		
 	#tire marks
 	var leaveMarks = false

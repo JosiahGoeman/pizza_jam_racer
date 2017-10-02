@@ -38,7 +38,7 @@ var pathPoints
 var pathPointCount
 
 func _ready():
-	var pathCurve = get_tree().get_root().get_node("root").get_node("track_loop").get_curve()
+	var pathCurve = get_tree().get_current_scene().get_node("track_loop").get_curve()
 	pathCurve.set_bake_interval(pathVertInterval)
 	pathPoints = pathCurve.get_baked_points()
 	pathPointCount = pathPoints.size()
@@ -64,7 +64,7 @@ func _process(delta):
 	
 	#steering
 	currentVertex = pathPoints[int(currentVertIndex)%pathPointCount]
-	currentVertex += get_tree().get_root().get_node("root").get_node("track_loop").get_pos()
+	currentVertex += get_tree().get_current_scene().get_node("track_loop").get_pos()
 	
 	if(get_pos().distance_squared_to(currentVertex) < indexIncDistSq):
 		currentVertIndex += 1
@@ -79,12 +79,12 @@ func _process(delta):
 	#particles.set_pos(forwardDirection * -15)
 
 	#accel/reverse/brake
-	var currentMaxSpeed = maxForwardSpeed * 1.75
+	var currentMaxSpeed = maxForwardSpeed * 1.6
 	var currentAccelPower = accelPower * 2
 	if(forwardSpeed < currentMaxSpeed):
 		velocity += forwardDirection * currentAccelPower * delta
 	
-	if(lapsCompleted == 1):
+	if(lapsCompleted == 3):
 		if(rootNode.raceState == rootNode.RACE_STATES.IN_PROGRESS):
 			rootNode.set_race_state(rootNode.RACE_STATES.LOSE)
 			_taunt_random(winTaunts, 600)
