@@ -7,7 +7,9 @@ enum RACE_STATES{
 	IN_PROGRESS,
 	WIN,
 	LOSE_STILL_FINISHING,
-	LOSE
+	LOSE,
+	BOSS_STARTING,
+	BOSS_PHASE_1
 }
 
 const startingPeriod = 3
@@ -50,6 +52,8 @@ func _process(delta):
 					music.play("music_2")
 			else:
 				chimePlayer.play("3-2-1")
+	elif(raceState == RACE_STATES.BOSS_STARTING):
+		pass
 
 func set_race_state(newState):
 	raceState = newState
