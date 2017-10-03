@@ -33,12 +33,16 @@ const loseTaunts = [
 	"Yeah, I did it! *hic*\nWait, no I didn't."
 ]
 
+var path
 var currentVertIndex = 0.0
 var pathPoints
 var pathPointCount
 
+onready var playerCar = rootNode.get_node("player_car")
+
 func _ready():
-	var pathCurve = get_tree().get_current_scene().get_node("track_loop").get_curve()
+	path = rootNode.get_node("track_loop")
+	var pathCurve = path.get_curve()
 	pathCurve.set_bake_interval(pathVertInterval)
 	pathPoints = pathCurve.get_baked_points()
 	pathPointCount = pathPoints.size()
@@ -79,7 +83,14 @@ func _process(delta):
 	#particles.set_pos(forwardDirection * -15)
 
 	#accel/reverse/brake
-	var currentMaxSpeed = maxForwardSpeed * 1.3
+	var myPathIndex = path.get_closest_point_on_track(get_global_pos())
+	var playerPathIndex = path.get_closest_point_on_track(playerCar.get_global_pos())
+	var balanceMultiplier = playerPathIndex - myPathIndex
+	balanceMultiplier = clamp(balanceMultiplier, -3, 10)
+	balanceMultiplier += 10
+	balanceMultiplier /= 10.0
+	var currentMaxSpeed = maxForwardSpeed * 1.2
+	currentMaxSpeed *= balanceMultiplier
 	var currentAccelPower = accelPower * 2
 	if(forwardSpeed < currentMaxSpeed):
 		velocity += forwardDirection * currentAccelPower * delta

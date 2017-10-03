@@ -61,7 +61,7 @@ func _process(delta):
 	tauntTimer += delta
 	if(tauntTimer > tauntPeriod):
 		tauntLabel.hide()
-	
+
 	impactSoundTimer += delta
 	
 	currentLapTime += delta

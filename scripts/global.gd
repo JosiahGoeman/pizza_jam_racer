@@ -21,6 +21,7 @@ onready var chimePlayer = get_node("starting_chime")
 onready var music = get_node("music")
 
 func _ready():
+	OS.set_window_size(Vector2(1920/2, 1080/2))
 	set_process(true)
 
 func _process(delta):

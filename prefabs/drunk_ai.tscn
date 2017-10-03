@@ -303,12 +303,9 @@ _update_shape_index = 0
 [node name="tire_marks" type="Node2D" parent="."]
 
 script/script = ExtResource( 18 )
-lineThickness = 3
+lineThickness = 5
 
 [node name="taunt" type="Node2D" parent="."]
-
-transform/pos = Vector2( -9.53674e-07, 9.53674e-07 )
-z/z = 50
 
 [node name="taunt_label" type="RichTextLabel" parent="taunt"]
 

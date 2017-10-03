@@ -107,3 +107,22 @@ func _get_path_normal(curve, index):
 		right = prevRight
 		
 	return (prevRight + right).normalized()
+
+func get_closest_point_on_track(to):
+	#transform to local space
+	var matrix = get_relative_transform_to_parent(get_tree().get_current_scene())
+	var localTo = to - matrix.get_origin()
+	localTo = localTo.rotated(-matrix.get_rotation())
+	localTo = localTo / matrix.get_scale()
+	
+	var curvePoints = get_curve().get_baked_points()
+	var curvePointCount = curvePoints.size()
+	var closestIndex = 0
+	var closestDistSqr = 3.402823e+38
+	for i in range(0, curvePointCount):
+		var point = curvePoints[i]
+		var distSqrToPoint = point.distance_squared_to(localTo)
+		if(distSqrToPoint < closestDistSqr):
+			closestDistSqr = distSqrToPoint
+			closestIndex = i
+	return closestIndex

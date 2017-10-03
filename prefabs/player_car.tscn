@@ -181,7 +181,7 @@ loop = false
 
 visibility/visible = false
 script/script = ExtResource( 10 )
-zoom = 1.0
+zoom = 2.0
 
 [node name="control_circle" type="Node2D" parent="."]
 
@@ -325,7 +325,6 @@ _update_shape_index = 0
 
 [node name="hud_overlay" type="CanvasLayer" parent="."]
 
-editor/display_folded = true
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -350,15 +349,15 @@ script/script = ExtResource( 21 )
 
 [node name="boost_meter" type="TextureFrame" parent="hud_overlay"]
 
-rect/scale = Vector2( 3, 3 )
+rect/scale = Vector2( 6, 6 )
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 12.0
-margin/top = 47.0
-margin/right = 28.0
-margin/bottom = 111.0
+margin/left = 10.0
+margin/top = 50.0
+margin/right = 26.0
+margin/bottom = 114.0
 texture = ExtResource( 22 )
 stretch_mode = 0
 script/script = ExtResource( 23 )
@@ -384,11 +383,12 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 960.0
-margin/bottom = 540.0
+margin/right = 1920.0
+margin/bottom = 1080.0
 
 [node name="race_failed" type="RichTextLabel" parent="hud_overlay/win_screen"]
 
+rect/scale = Vector2( 2, 2 )
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -444,11 +444,12 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 960.0
-margin/bottom = 540.0
+margin/right = 1920.0
+margin/bottom = 1080.0
 
 [node name="race_failed" type="RichTextLabel" parent="hud_overlay/lose_screen"]
 
+rect/scale = Vector2( 2, 2 )
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -456,7 +457,7 @@ size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 92.0
 margin/right = 960.0
-margin/bottom = 350.0
+margin/bottom = 371.0
 custom_fonts/normal_font = ExtResource( 24 )
 bbcode/enabled = true
 bbcode/bbcode = "[center]Race Failed[/center]"
@@ -484,15 +485,14 @@ blinkSpeed = 1
 
 [node name="lap_counter" type="RichTextLabel" parent="hud_overlay"]
 
-rect/scale = Vector2( 0.5, 0.5 )
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 77.0
-margin/top = 47.0
-margin/right = 597.0
-margin/bottom = 155.0
+margin/left = 120.0
+margin/top = 50.0
+margin/right = 640.0
+margin/bottom = 158.0
 custom_fonts/normal_font = ExtResource( 24 )
 bbcode/enabled = true
 bbcode/bbcode = "Lap: 0 / 3"
@@ -502,7 +502,7 @@ percent_visible = 1.0
 [node name="tire_marks" type="Node2D" parent="."]
 
 script/script = ExtResource( 26 )
-lineThickness = 3
+lineThickness = 5
 
 [node name="taunt" type="CanvasLayer" parent="."]
 
