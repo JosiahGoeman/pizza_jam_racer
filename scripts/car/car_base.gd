@@ -49,7 +49,7 @@ onready var engineLoop = get_node("engine_loop")
 onready var boostLoop = get_node("boost_loop")
 onready var squealLoop = get_node("squeal_loop")
 onready var particles = get_node("particles")
-onready var tauntLabel = get_node("taunt_label")
+onready var tauntLabel = get_node("taunt").get_node("taunt_label")
 
 func _change_face_angle(val):
 	facingAngle = val * 0.0174533
@@ -179,7 +179,8 @@ func _handle_car_collision(otherCar):
 	if(penetrationDepth > 0):
 		set_pos(get_pos() - collisionNormal * penetrationDepth)
 		var vellDiff = velocity - otherCar.velocity
-		velocity -= collisionNormal * vellDiff.dot(collisionNormal) * 1.5
+		velocity -= collisionNormal * vellDiff.dot(collisionNormal)
+		otherCar.velocity += collisionNormal * vellDiff.dot(collisionNormal)
 		if(impactSoundTimer > minImpactSoundTime):
 			impactSoundTimer = 0
 			samplePlayer.play("impact")
@@ -188,7 +189,7 @@ func _handle_car_collision(otherCar):
 func _handle_wall_collision(wall):
 	var polygonNode = wall.get_node("collision_polygon")
 	var polygon = polygonNode.get_polygon()
-	var wallMatrix = polygonNode.get_relative_transform_to_parent(get_tree().get_root().get_node("root"))
+	var wallMatrix = polygonNode.get_relative_transform_to_parent(get_tree().get_current_scene())
 	var pos = get_global_pos()
 	var collisionPoint = _get_closest_point_on_polygon(polygon, wallMatrix, pos)
 	var collisionNormal = (collisionPoint-pos).normalized()

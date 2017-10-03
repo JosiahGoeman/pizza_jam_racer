@@ -23,10 +23,15 @@ func _draw():
 		_draw_walls()
 
 func _draw_walls():
+	if(wallTexture == null):
+		return
 	var polygon = get_polygon()
 	for i in range(0, polygon.size()):
 		var thisVert = polygon[i]
 		var nextVert = polygon[(i+1)%polygon.size()]
+		#invalid polygon; will cause error
+		if(thisVert.x == nextVert.x):
+			continue
 		var aboveThis = thisVert + Vector2(0, -wallHeight)
 		var aboveNext = nextVert + Vector2(0, -wallHeight)
 		var segmentPolygon = [thisVert, aboveThis, aboveNext, nextVert]
@@ -39,6 +44,8 @@ func _draw_walls():
 		draw_polygon(segmentPolygon, segmentColors, segmentUVs, wallTexture)
 
 func _draw_top():
+	if(topTexture == null):
+		return
 	var topPolygon = get_polygon()
 	var topColors = []
 	var topUVs = []

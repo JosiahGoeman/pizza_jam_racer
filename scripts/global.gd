@@ -25,7 +25,9 @@ func _ready():
 
 func _process(delta):
 	if(Input.is_key_pressed(KEY_ESCAPE)):
-		get_tree().quit()
+		if(raceState == RACE_STATES.IN_PROGRESS ||
+		raceState == RACE_STATES.LOSE):
+			get_tree().reload_current_scene()
 	if(Input.is_key_pressed(KEY_F11)):
 		OS.set_window_fullscreen(!OS.is_window_fullscreen())
 	

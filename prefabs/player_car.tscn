@@ -323,24 +323,9 @@ shape = SubResource( 2 )
 trigger = false
 _update_shape_index = 0
 
-[node name="taunt_label" type="RichTextLabel" parent="."]
-
-visibility/visible = false
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = -100.0
-margin/top = -60.0
-margin/right = 100.0
-margin/bottom = -20.0
-bbcode/enabled = true
-bbcode/bbcode = ""
-visible_characters = -1
-percent_visible = 1.0
-
 [node name="hud_overlay" type="CanvasLayer" parent="."]
 
+editor/display_folded = true
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -518,5 +503,28 @@ percent_visible = 1.0
 
 script/script = ExtResource( 26 )
 lineThickness = 3
+
+[node name="taunt" type="CanvasLayer" parent="."]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="taunt_label" type="RichTextLabel" parent="taunt"]
+
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = -100.0
+margin/top = -60.0
+margin/right = 100.0
+margin/bottom = -20.0
+bbcode/enabled = true
+bbcode/bbcode = ""
+visible_characters = -1
+percent_visible = 1.0
 
 

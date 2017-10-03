@@ -8,7 +8,10 @@ export var drawBakeInterval = 64
 export var colliderBakeInterval = 128
 export var PRESS_ME_TO_REBUILD_COLLIDER = false setget _update_collision_polygon
 
+var inGame = false
+
 func _ready():
+	inGame = true
 	pass
 
 func _change_texture(texture):
@@ -26,9 +29,9 @@ func _set_texture_interval(val):
 #create the polygon for the collider
 #this can't be the same as the drawing because it has to all be one piece
 func _update_collision_polygon(val):
-	PRESS_ME_TO_REBUILD_COLLIDER = val
-	if(get_tree() == null || !get_tree().is_editor_hint()):
+	if(!inGame):
 		return
+	PRESS_ME_TO_REBUILD_COLLIDER = val
 	
 	var curve = get_curve()
 	curve.set_bake_interval(colliderBakeInterval)

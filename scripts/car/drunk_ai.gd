@@ -79,7 +79,7 @@ func _process(delta):
 	#particles.set_pos(forwardDirection * -15)
 
 	#accel/reverse/brake
-	var currentMaxSpeed = maxForwardSpeed * 1.6
+	var currentMaxSpeed = maxForwardSpeed * 1.3
 	var currentAccelPower = accelPower * 2
 	if(forwardSpeed < currentMaxSpeed):
 		velocity += forwardDirection * currentAccelPower * delta
