@@ -11,13 +11,13 @@
 [ext_resource path="res://scripts/animated_sprite_controller.gd" type="Script" id=9]
 [ext_resource path="res://scripts/follow_camera.gd" type="Script" id=10]
 [ext_resource path="res://scripts/control_circle.gd" type="Script" id=11]
-[ext_resource path="res://sounds/boost_end.wav" type="Sample" id=12]
-[ext_resource path="res://sounds/boost_fail.wav" type="Sample" id=13]
-[ext_resource path="res://sounds/boost_start.wav" type="Sample" id=14]
-[ext_resource path="res://sounds/impact.wav" type="Sample" id=15]
-[ext_resource path="res://sounds/pickup.wav" type="Sample" id=16]
-[ext_resource path="res://sounds/boost.wav" type="Sample" id=17]
-[ext_resource path="res://sounds/engine_loop.wav" type="Sample" id=18]
+[ext_resource path="res://sounds/imported/boost_end.smp" type="Sample" id=12]
+[ext_resource path="res://sounds/imported/boost_fail.smp" type="Sample" id=13]
+[ext_resource path="res://sounds/imported/boost_start.smp" type="Sample" id=14]
+[ext_resource path="res://sounds/imported/impact.smp" type="Sample" id=15]
+[ext_resource path="res://sounds/imported/pickup.smp" type="Sample" id=16]
+[ext_resource path="res://sounds/imported/boost_loop.smp" type="Sample" id=17]
+[ext_resource path="res://sounds/imported/engine_loop.smp" type="Sample" id=18]
 [ext_resource path="res://sounds/imported/tire_squeal_loop.smp" type="Sample" id=19]
 [ext_resource path="res://graphics/particles/dust_puff.png" type="Texture" id=20]
 [ext_resource path="res://scripts/fps_counter.gd" type="Script" id=21]
@@ -35,7 +35,7 @@ radius = 32.0
 [sub_resource type="CircleShape2D" id=2]
 
 custom_solver_bias = 0.0
-radius = 5.0
+radius = 10.0
 
 [sub_resource type="SampleLibrary" id=3]
 
@@ -72,7 +72,7 @@ samples/pickup = {
 
 [sub_resource type="SampleLibrary" id=4]
 
-samples/boost = {
+samples/boost_loop = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
@@ -91,7 +91,7 @@ samples/engine_loop = {
 [sub_resource type="SampleLibrary" id=6]
 
 samples/tire_squeal_loop = {
-"db": -20.0,
+"db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 19 )
@@ -307,8 +307,6 @@ params/anim_initial_pos = 0.0
 
 [node name="car_collider" type="KinematicBody2D" parent="."]
 
-editor/display_folded = true
-visibility/visible = false
 input/pickable = false
 shapes/0/shape = SubResource( 2 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
@@ -325,6 +323,7 @@ _update_shape_index = 0
 
 [node name="hud_overlay" type="CanvasLayer" parent="."]
 
+editor/display_folded = true
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -503,6 +502,10 @@ percent_visible = 1.0
 
 script/script = ExtResource( 26 )
 lineThickness = 5
+p1Offset = Vector2( -5, -10 )
+p2Offset = Vector2( 5, -10 )
+p3Offset = Vector2( -5, 10 )
+p4Offset = Vector2( 5, 10 )
 
 [node name="taunt" type="CanvasLayer" parent="."]
 

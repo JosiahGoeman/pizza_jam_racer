@@ -5,10 +5,10 @@ const maxPoints = 1000
 export var lineThickness = 2
 const lineFadeIntensity = 500.0
 const lineFadeMax = .3
-const p1Offset = Vector2(-5, -10)
-const p2Offset = Vector2(5, -10)
-const p3Offset = Vector2(-5, 10)
-const p4Offset = Vector2(5, 10)
+export var p1Offset = Vector2(-5, -10)
+export var p2Offset = Vector2(5, -10)
+export var p3Offset = Vector2(-5, 10)
+export var p4Offset = Vector2(5, 10)
 
 onready var car = get_parent()
 var prevCarPos

@@ -8,6 +8,7 @@ enum RACE_STATES{
 	WIN,
 	LOSE_STILL_FINISHING,
 	LOSE,
+	CHALLENGER_APPROACHES,
 	BOSS_STARTING,
 	BOSS_PHASE_1
 }
@@ -23,7 +24,12 @@ onready var chimePlayer = get_node("starting_chime")
 onready var music = get_node("music")
 
 func _ready():
-	OS.set_window_size(Vector2(1920/2, 1080/2))
+	if(raceState == RACE_STATES.TUTORIAL):
+		OS.set_window_size(Vector2(1920/2, 1080/2))
+	
+	if(get_tree().get_current_scene().get_name() == "challenger_appears"):
+		music.play("fight")
+	
 	set_process(true)
 
 func _process(delta):
@@ -31,8 +37,6 @@ func _process(delta):
 		if(raceState == RACE_STATES.IN_PROGRESS ||
 		raceState == RACE_STATES.LOSE):
 			get_tree().reload_current_scene()
-	if(Input.is_key_pressed(KEY_F11)):
-		OS.set_window_fullscreen(!OS.is_window_fullscreen())
 	
 	timer += delta
 	if(raceState == RACE_STATES.STARTING):
@@ -50,6 +54,9 @@ func _process(delta):
 					music.play("music_1")
 				elif(get_name() == "race_2"):
 					music.play("music_2")
+				elif(get_name() == "boss_arena"):
+					chimePlayer.play("explosion")
+					music.play("boss")
 			else:
 				chimePlayer.play("3-2-1")
 	elif(raceState == RACE_STATES.BOSS_STARTING):

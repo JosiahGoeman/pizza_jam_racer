@@ -144,7 +144,7 @@ points = Vector2Array( 1000, -2500, 1000, 500, -1000, 500, -1000, -2500 )
 custom_solver_bias = 0.0
 points = Vector2Array( -300, 100, -300, -300, 300, -300, 300, 100 )
 
-[node name="root" type="Node2D"]
+[node name="tutorial" type="Node2D"]
 
 script/script = ExtResource( 1 )
 raceState = 0
@@ -438,7 +438,6 @@ drawWallsFirst = true
 
 [node name="road_" type="StaticBody2D" parent="."]
 
-editor/display_folded = true
 z/z = -1
 input/pickable = false
 shapes/0/shape = SubResource( 26 )
@@ -453,7 +452,8 @@ bounce = 0.0
 
 [node name="polygon" type="Polygon2D" parent="road_"]
 
-polygon = Vector2Array( -1000, -2500, -1000, 500, 1000, 500, 1000, -2500 )
+transform/pos = Vector2( -30, -12 )
+polygon = Vector2Array( -970, -2488, -970, 512, 1030, 512, 1030, -2488 )
 uv = Vector2Array(  )
 color = Color( 1, 1, 1, 1 )
 vertex_colors = ColorArray(  )

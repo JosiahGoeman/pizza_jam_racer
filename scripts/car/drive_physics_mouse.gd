@@ -13,6 +13,7 @@ onready var boostMeter = get_node("hud_overlay").get_node("boost_meter")
 onready var winScreen = get_node("hud_overlay").get_node("win_screen")
 onready var loseScreen = get_node("hud_overlay").get_node("lose_screen")
 onready var lapCounter = get_node("hud_overlay").get_node("lap_counter")
+onready var rocketPrefab = load("res://prefabs/rocket.tscn")
 
 func _ready():
 	engineLoop.play("engine_loop")
@@ -23,7 +24,7 @@ func _set_boosting(val):
 	if(val):
 		samplePlayer.stop_all()
 		samplePlayer.play("boost_start")
-		boostLoop.play("boost")
+		boostLoop.play("boost_loop")
 		boostEffect.play()
 		particles.set_emitting(true)
 		camera.set_shake_amount(5)
@@ -39,18 +40,17 @@ func _set_boosting(val):
 
 var boostKeyPrev = false
 var leftMousePrev = false
+var rocketKeyPrev = false
 func _process(delta):
 	if(rootNode.raceState == rootNode.RACE_STATES.STARTING ||
 	rootNode.raceState == rootNode.RACE_STATES.COUNTDOWN):
 		return
 	
-	if(rootNode.raceState == rootNode.RACE_STATES.TUTORIAL):
-		boostJuice = 1
-	
 	#grab input
 	var brake = Input.is_key_pressed(KEY_SHIFT)
 	var boostKey = Input.is_mouse_button_pressed(BUTTON_RIGHT)
 	var leftMouse = Input.is_mouse_button_pressed(BUTTON_LEFT)
+	var rocketKey = Input.is_key_pressed(KEY_SPACE)
 	
 	var forwardDirection = get_forward_direction()
 	var forwardSpeed = velocity.dot(forwardDirection)
@@ -64,6 +64,14 @@ func _process(delta):
 			samplePlayer.play("pickup")
 			boostJuice = 1
 			boostMeter.set_boost_level(boostJuice)
+	
+	#here's my one-step plan...
+	if(rocketKey && !rocketKeyPrev):
+		var cuteLittleRocket = rocketPrefab.instance()
+		cuteLittleRocket.set_global_pos(get_global_pos())
+		cuteLittleRocket.facingAngle = facingAngle
+		cuteLittleRocket.velocity = velocity
+		rootNode.add_child(cuteLittleRocket)
 
 	#mouse control
 	steerAngle = 0
@@ -88,7 +96,10 @@ func _process(delta):
 		var currentMaxSpeed = maxForwardSpeed
 		var currentAccelPower = accelPower
 		if(usingBoost && boostJuice >= 0):
-			boostJuice -= boostConsumeRate * delta
+			var currentScene = get_tree().get_current_scene().get_name()
+			if(currentScene != "tutorial" &&
+			currentScene != "boss_arena"):
+				boostJuice -= boostConsumeRate * delta
 			particles.set_emitting(true)
 			if(boostJuice < 0):
 				_set_boosting(false)
@@ -110,6 +121,7 @@ func _process(delta):
 				velocity -= sign(forwardSpeed) * forwardDirection * brakePower * delta
 	boostKeyPrev = boostKey
 	leftMousePrev = leftMouse
+	rocketKeyPrev = rocketKey
 	
 	lapCounter.set_bbcode("Lap: "+str(lapsCompleted)+" / 3")
 	if(lapsCompleted == 3):
@@ -123,7 +135,6 @@ func _process(delta):
 				get_tree().change_scene("res://rooms/race_2.tscn")
 			if(get_tree().get_current_scene().get_name() == "race_2"):
 				get_tree().change_scene("res://rooms/a_challenger_appears.tscn")
-				print("todo: make next race")
 			
 	if(rootNode.raceState == rootNode.RACE_STATES.LOSE):
 		loseScreen.show()

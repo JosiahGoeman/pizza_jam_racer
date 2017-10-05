@@ -175,7 +175,7 @@ func get_right_direction():
 func _handle_car_collision(otherCar):
 	var diff = otherCar.get_global_pos() - get_global_pos()
 	var collisionNormal = diff.normalized()
-	var penetrationDepth = colliderRadius - diff.length()
+	var penetrationDepth = (colliderRadius + otherCar.colliderRadius) - diff.length()
 	if(penetrationDepth > 0):
 		set_pos(get_pos() - collisionNormal * penetrationDepth)
 		var vellDiff = velocity - otherCar.velocity

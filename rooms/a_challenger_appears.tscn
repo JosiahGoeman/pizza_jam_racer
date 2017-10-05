@@ -1,11 +1,12 @@
-[gd_scene load_steps=8 format=1]
+[gd_scene load_steps=9 format=1]
 
-[ext_resource path="res://scripts/challenger_appears.gd" type="Script" id=1]
-[ext_resource path="res://graphics/the most important graphics/trump_spin_rwb.png" type="Texture" id=2]
-[ext_resource path="res://graphics/imported/comic_zine_ot.fnt" type="BitmapFont" id=3]
-[ext_resource path="res://scripts/blink.gd" type="Script" id=4]
-[ext_resource path="res://graphics/the most important graphics/trump.png" type="Texture" id=5]
-[ext_resource path="res://music/imported/fight.smp" type="Sample" id=6]
+[ext_resource path="res://scripts/global.gd" type="Script" id=1]
+[ext_resource path="res://scripts/challenger_appears.gd" type="Script" id=2]
+[ext_resource path="res://graphics/the most important graphics/trump_spin_rwb.png" type="Texture" id=3]
+[ext_resource path="res://graphics/imported/comic_zine_ot.fnt" type="BitmapFont" id=4]
+[ext_resource path="res://scripts/blink.gd" type="Script" id=5]
+[ext_resource path="res://graphics/the most important graphics/trump.png" type="Texture" id=6]
+[ext_resource path="res://music/fight.wav" type="Sample" id=7]
 
 [sub_resource type="SampleLibrary" id=1]
 
@@ -13,10 +14,13 @@ samples/fight = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 6 )
+"sample": ExtResource( 7 )
 }
 
-[node name="Node2D" type="Node2D"]
+[node name="challenger_appears" type="Node2D"]
+
+script/script = ExtResource( 1 )
+raceState = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -24,7 +28,7 @@ layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
-script/script = ExtResource( 1 )
+script/script = ExtResource( 2 )
 backgroundSpinSpeed = 1
 lightnessInc = 2
 
@@ -32,7 +36,7 @@ lightnessInc = 2
 
 transform/pos = Vector2( 1000, 500 )
 transform/scale = Vector2( 40, 40 )
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
 
 [node name="Panel" type="Panel" parent="CanvasLayer"]
 
@@ -56,7 +60,7 @@ margin/left = 0.0
 margin/top = 900.0
 margin/right = 1900.0
 margin/bottom = 1100.0
-custom_fonts/normal_font = ExtResource( 3 )
+custom_fonts/normal_font = ExtResource( 4 )
 bbcode/enabled = true
 bbcode/bbcode = "[center]A Challenger Approaches![/center]"
 visible_characters = -1
@@ -73,21 +77,38 @@ margin/left = 0.0
 margin/top = 1000.0
 margin/right = 3800.0
 margin/bottom = 1200.0
-custom_fonts/normal_font = ExtResource( 3 )
+custom_fonts/normal_font = ExtResource( 4 )
 bbcode/enabled = true
 bbcode/bbcode = "[center]Press SPACE to continue...if you dare[/center]"
 visible_characters = -1
 percent_visible = 1.0
-script/script = ExtResource( 4 )
+script/script = ExtResource( 5 )
 blinkSpeed = 1
 
 [node name="drumpf" type="Sprite" parent="CanvasLayer"]
 
 transform/pos = Vector2( 1000, 500 )
 transform/scale = Vector2( 20, 20 )
-texture = ExtResource( 5 )
+texture = ExtResource( 6 )
 
-[node name="music" type="SamplePlayer" parent="CanvasLayer"]
+[node name="starting_chime" type="SamplePlayer" parent="."]
+
+config/polyphony = 1
+config/samples = null
+default/volume_db = 0.0
+default/pitch_scale = 1.0
+default/pan = 0.0
+default/depth = 0.0
+default/height = 0.0
+default/filter/type = 0
+default/filter/cutoff = 5000.0
+default/filter/resonance = 1.0
+default/filter/gain = 1.0
+default/reverb_room = 2
+default/reverb_send = 0.0
+default/chorus_send = 0.0
+
+[node name="music" type="SamplePlayer" parent="."]
 
 config/polyphony = 1
 config/samples = SubResource( 1 )
