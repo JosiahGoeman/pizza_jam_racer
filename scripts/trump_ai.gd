@@ -1,37 +1,34 @@
 extends "res://scripts/car/car_base.gd"
 
-const startingTaunts = [
-	"Ah yeeaaah...\nracetime...fun.",
-	"Woo im drunk :D",
-	"*hic*",
-	"zzzz.. oh uh, wha?",
-]
+export var bombPeriod = 1
 
-const collisionTaunts = [
-	"Watch it!",
-	"Moron!",
-	"Learn to drive!",
-	"Ugh!"
-]
-
-const winTaunts = [
-	"I'm drunk, you\ndon't have an excuse.",
-	"Could do this in my... zzzz",
-	"This calls for a drink!",
-	"Whoo, ah... yeah... *hic*"
-]
-
-const loseTaunts = [
-	"Oh I'm gonna need\na drink after this.",
-	"Who was my dedicated\ndriver again?",
-	"Ah, whatever.  ...zzzz",
-	"Yeah, I did it! *hic*\nWait, no I didn't."
-]
+var bombTimer = 0
 
 onready var playerCar = rootNode.get_node("player_car")
-
+onready var rocketPrefab = load("res://prefabs/bomb.tscn")
 
 func _ready():
+	collisionTaunts = [
+		"I'm HUGE!!!",
+		"I think we have a great relationship!",
+		"Fight back!  Be brutal, be tough!",
+		"Enough is enough!"
+	]
+	
+	winTaunts = [
+		"You fought me and lost so badly you just don’t know what to do. Love!",
+		"You're not sending your best.",
+		"A lot of good things are happening.",
+		"We have had tremendous success, but we don't talk about it."
+	]
+	
+	loseTaunts = [
+		"That's fake news.",
+		"I thought it would be easier...",
+		"I like to drive.  I can't drive anymore.",
+		"Sometimes you have to give up the fight and move on to something more productive."
+	]
+	
 	set_process(true)
 
 func _process(delta):
@@ -47,12 +44,16 @@ func _process(delta):
 	var forwardDirection = get_forward_direction()
 	var forwardSpeed = velocity.dot(forwardDirection)
 	
-	#steering
-	#currentVertex = pathPoints[int(currentVertIndex)%pathPointCount]
-	#currentVertex += get_tree().get_current_scene().get_node("track_loop").get_pos()
-	
-	#if(get_pos().distance_squared_to(currentVertex) < indexIncDistSq):
-	#	currentVertIndex += 1
+	#bombs
+	bombTimer += delta
+	if(bombTimer > bombPeriod):
+		bombTimer = 0
+		var cuteLittleRocket = rocketPrefab.instance()
+		cuteLittleRocket.targetPos = Vector2(randi()%1000-500, randi()%1000-500)
+		cuteLittleRocket.set_global_pos(get_global_pos())
+		#cuteLittleRocket.facingAngle = facingAngle
+		#cuteLittleRocket.velocity = velocity
+		rootNode.add_child(cuteLittleRocket)
 	
 	var bearingToPlayer = get_forward_direction().angle_to(playerCar.get_global_pos() - get_global_pos())
 	steerAngle = bearingToPlayer
@@ -76,11 +77,3 @@ func _process(delta):
 		velocity += forwardDirection * currentAccelPower * delta
 	
 	update()
-
-func _handle_car_collision(otherCar):
-	var diff = get_pos() - otherCar.get_pos()
-	var collisionNormal = diff.normalized()
-	var penetrationDepth = colliderRadius - diff.length()
-	if(penetrationDepth > 0):
-		_taunt_random(collisionTaunts, 2)
-

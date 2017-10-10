@@ -35,6 +35,11 @@ var totalTime = 0
 var touchedCheckpoint = false
 var lapsCompleted = 0
 
+var startingTaunts = []
+var collisionTaunts = []
+var winTaunts = []
+var loseTaunts = []
+
 #node references
 onready var rootNode = get_tree().get_current_scene()
 onready var spriteNode = get_node("sprites")				#reference to the sprite so we don't have to look it up every time
@@ -143,6 +148,7 @@ func _process(delta):
 			var otherCar = overlapped[i].get_parent()
 			if(otherCar != self):
 				_handle_car_collision(otherCar)
+	update()
 
 func _taunt(message, time):
 	tauntTimer = 0
@@ -151,7 +157,7 @@ func _taunt(message, time):
 	tauntLabel.show()
 
 func _taunt_random(messages, time):
-	if(tauntTimer < tauntPeriod):
+	if(messages.size() == 0 || tauntTimer < tauntPeriod):
 		return
 	randomize()
 	_taunt(messages[randi()%messages.size()], time)
@@ -181,9 +187,12 @@ func _handle_car_collision(otherCar):
 		var vellDiff = velocity - otherCar.velocity
 		velocity -= collisionNormal * vellDiff.dot(collisionNormal)
 		otherCar.velocity += collisionNormal * vellDiff.dot(collisionNormal)
-		if(impactSoundTimer > minImpactSoundTime):
-			impactSoundTimer = 0
+		if(vellDiff.length_squared() > 50 * 50):
 			samplePlayer.play("impact")
+			_taunt_random(collisionTaunts, 2)
+		otherCar._taunt_random(otherCar.collisionTaunts, 2)
+		impactSoundTimer = 0
+			
 
 #push car out of walls
 func _handle_wall_collision(wall):
@@ -238,3 +247,7 @@ func _get_closest_point_on_line_segment(p1, p2, to):
 		
 	var projectedPoint = p1 + diffNorm * dotProduct
 	return projectedPoint
+
+func _draw():
+	pass
+	#draw_circle(Vector2(), colliderRadius, Color(1, 0, 0))

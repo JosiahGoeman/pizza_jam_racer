@@ -1,4 +1,4 @@
-[gd_scene load_steps=172 format=1]
+[gd_scene load_steps=174 format=1]
 
 [ext_resource path="res://scripts/global.gd" type="Script" id=1]
 [ext_resource path="res://textures/Grass2_Sparse.png" type="Texture" id=2]
@@ -16,7 +16,9 @@
 [ext_resource path="res://graphics/imported/comic_zine_ot.fnt" type="BitmapFont" id=14]
 [ext_resource path="res://sounds/3-2-1.wav" type="Sample" id=15]
 [ext_resource path="res://sounds/go.wav" type="Sample" id=16]
-[ext_resource path="res://music/imported/music_2.smp" type="Sample" id=17]
+[ext_resource path="res://music/imported/lose.smp" type="Sample" id=17]
+[ext_resource path="res://music/imported/music_2.smp" type="Sample" id=18]
+[ext_resource path="res://music/imported/win.smp" type="Sample" id=19]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 
@@ -797,11 +799,23 @@ samples/go = {
 
 [sub_resource type="SampleLibrary" id=154]
 
-samples/music_2 = {
+samples/lose = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 17 )
+}
+samples/music_2 = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 18 )
+}
+samples/win = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 19 )
 }
 
 [node name="race_2" type="Node2D"]

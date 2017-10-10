@@ -10,7 +10,7 @@ func _ready():
 func _process(delta):
 	if(rootNode.raceState == rootNode.RACE_STATES.IN_PROGRESS):
 		explosion.playWithCallback(self, "onAnimEnd")
-		sprite.hide()
+		sprite.set_frame(1)
 
 func onAnimEnd():
 	queue_free()

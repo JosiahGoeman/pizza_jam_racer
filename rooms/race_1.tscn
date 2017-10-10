@@ -1,4 +1,4 @@
-[gd_scene load_steps=182 format=1]
+[gd_scene load_steps=184 format=1]
 
 [ext_resource path="res://scripts/global.gd" type="Script" id=1]
 [ext_resource path="res://textures/SandAndStones.png" type="Texture" id=2]
@@ -14,9 +14,11 @@
 [ext_resource path="res://prefabs/careful_ai.tscn" type="PackedScene" id=12]
 [ext_resource path="res://scripts/intro_screen.gd" type="Script" id=13]
 [ext_resource path="res://graphics/imported/comic_zine_ot.fnt" type="BitmapFont" id=14]
-[ext_resource path="res://music/imported/music_1.smp" type="Sample" id=15]
-[ext_resource path="res://sounds/3-2-1.wav" type="Sample" id=16]
-[ext_resource path="res://sounds/go.wav" type="Sample" id=17]
+[ext_resource path="res://music/imported/lose.smp" type="Sample" id=15]
+[ext_resource path="res://music/imported/music_1.smp" type="Sample" id=16]
+[ext_resource path="res://music/imported/win.smp" type="Sample" id=17]
+[ext_resource path="res://sounds/3-2-1.wav" type="Sample" id=18]
+[ext_resource path="res://sounds/go.wav" type="Sample" id=19]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 
@@ -832,11 +834,23 @@ points = Vector2Array( 63.5, -32, 64.5, 32, -63.5, 32, -63.5, -32 )
 
 [sub_resource type="SampleLibrary" id=163]
 
-samples/music_1 = {
+samples/lose = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 15 )
+}
+samples/music_1 = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 16 )
+}
+samples/win = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 17 )
 }
 
 [sub_resource type="SampleLibrary" id=164]
@@ -845,13 +859,13 @@ samples/3-2-1 = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 16 )
+"sample": ExtResource( 18 )
 }
 samples/go = {
 "db": 0.0,
 "pitch": 1.0,
 "priority": 0,
-"sample": ExtResource( 17 )
+"sample": ExtResource( 19 )
 }
 
 [node name="race_1" type="Node2D"]

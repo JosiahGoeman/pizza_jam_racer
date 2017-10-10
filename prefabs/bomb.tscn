@@ -1,0 +1,76 @@
+[gd_scene load_steps=8 format=1]
+
+[ext_resource path="res://scripts/bomb.gd" type="Script" id=1]
+[ext_resource path="res://graphics/items/item_bomb.png" type="Texture" id=2]
+[ext_resource path="res://graphics/explosions/explosion_5.png" type="Texture" id=3]
+[ext_resource path="res://scripts/animated_sprite_controller.gd" type="Script" id=4]
+[ext_resource path="res://sounds/imported/bomb.smp" type="Sample" id=5]
+
+[sub_resource type="SampleLibrary" id=1]
+
+samples/bomb = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 5 )
+}
+
+[sub_resource type="CircleShape2D" id=2]
+
+custom_solver_bias = 0.0
+radius = 10.0
+
+[node name="bomb" type="Node2D"]
+
+script/script = ExtResource( 1 )
+period = 5
+growShrinkSpeed = 5
+
+[node name="sprite" type="Sprite" parent="."]
+
+transform/pos = Vector2( 0, -3 )
+texture = ExtResource( 2 )
+
+[node name="explosion" type="Sprite" parent="."]
+
+visibility/visible = false
+transform/scale = Vector2( 3, 3 )
+texture = ExtResource( 3 )
+hframes = 8
+script/script = ExtResource( 4 )
+frameCount = 8
+animSpeed = 12
+loop = false
+
+[node name="sound" type="SamplePlayer2D" parent="."]
+
+visibility/visible = false
+params/volume_db = 0.0
+params/pitch_scale = 1.0
+params/attenuation/min_distance = 1.0
+params/attenuation/max_distance = 2048.0
+params/attenuation/distance_exp = 1.0
+config/polyphony = 1
+config/samples = SubResource( 1 )
+config/pitch_random = 0.0
+
+[node name="collider" type="Area2D" parent="."]
+
+visibility/visible = false
+input/pickable = true
+shapes/0/shape = SubResource( 2 )
+shapes/0/transform = Matrix32( 5, 0, 0, 5, 0, 0 )
+shapes/0/trigger = false
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+
+[node name="collisionShape" type="CollisionShape2D" parent="collider"]
+
+transform/scale = Vector2( 5, 5 )
+shape = SubResource( 2 )
+trigger = false
+_update_shape_index = 0
+
+

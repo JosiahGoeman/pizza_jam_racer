@@ -57,6 +57,7 @@ maxLoopPitch = 3
 speedForImpactSount = 50
 minImpactSoundTime = 0.25
 facingAngle = 0
+bombPeriod = 1
 
 [node name="sprites" type="Node2D" parent="."]
 
